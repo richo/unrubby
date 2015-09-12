@@ -1,0 +1,113 @@
+##
+# reversal.rb: decompiling YARV instruction sequences
+#
+# Copyright 2010 Michael J. Edgar, michael.j.edgar@dartmouth.edu
+#
+# MIT License, see LICENSE file in gem package
+
+require 'pp'
+STDERR.puts "Loading reversal!"
+
+module Reversal
+  LOADED = false
+end
+
+$:.unshift(File.dirname(__FILE__))
+
+module Reversal
+  autoload :Instructions, "reversal/instructions"
+end
+
+require 'reversal/ir'
+require 'reversal/iseq'
+require 'reversal/reverser'
+
+
+module Reversal
+  VERSION = "0.9.0"
+  @@klassmap = Hash.new do |h, k|
+    h[k] = {
+      :methods => [],
+      :includes => [],
+      :extends => [],
+      :super => nil,
+    }
+  end
+
+  def maybe_dump_iseq(iseq)
+    if ENV['UNRUBBY_DUMP_ISEQ']
+      require 'pp'
+      pp iseq.to_a
+
+    end
+  end
+  module_function :maybe_dump_iseq
+
+  def decompile(iseq)
+    decompiled = Reverser.new(iseq).to_ir.to_s
+    maybe_dump_iseq(iseq)
+    decompiled
+  end
+  module_function :decompile
+
+  def decompile_into(iseq, klass)
+    decompiled = self.decompile(iseq)
+    @@klassmap[klass][:methods] << decompiled
+    maybe_dump_iseq(iseq)
+  end
+  module_function :decompile_into
+
+  def dump_klassmap
+    @@klassmap.each do |klass, attrs|
+      if klass.is_a? Class
+        sooper = attrs[:super]
+        puts "class #{klass.inspect}#{" #{sooper}" if sooper}\n"
+      elsif klass.is_a? Module
+        puts "module #{klass.inspect}\n"
+      else
+        raise "No idea how to repr #{klass.inspect}"
+      end
+
+      attrs[:includes].each do |i|
+        puts "  include " + i.inspect
+      end
+
+      attrs[:extends].each do |i|
+        puts "  extend " + i.inspect
+      end
+
+      attrs[:methods].each do |m|
+        m.lines.each do |line|
+          puts "  " + line
+        end
+      end
+      puts "end"
+    end
+  end
+  module_function :dump_klassmap
+
+  def mark_included(obj, mod)
+    @@klassmap[mod][:includes] << obj
+  end
+  module_function :mark_included
+
+  def mark_extended(obj, mod)
+    @@klassmap[mod][:extends] << obj
+  end
+  module_function :mark_extended
+
+  def register_class(klass, sooper)
+    @klassmap[klass][:super] = sooper
+  end
+  module_function :register_class
+end
+
+module Reversal
+  LOADED = true # Whatever
+end
+
+at_exit {
+  Reversal.dump_klassmap
+}
+
+STDERR.puts "Done loading reversal!"

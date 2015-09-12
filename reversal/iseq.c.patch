@@ -1,0 +1,42 @@
+Index: iseq.c
+===================================================================
+--- iseq.c	(revision 26813)
++++ iseq.c	(working copy)
+@@ -1004,6 +1004,31 @@
+ }
+ 
+ static VALUE
++iseq_s_get_from_method(VALUE klass, VALUE body)
++{
++    VALUE ret = Qnil;
++    rb_iseq_t *iseq;
++    extern rb_iseq_t *rb_method_get_iseq(VALUE body);
++
++    rb_secure(1);
++
++    if (rb_obj_is_proc(body)) {
++	rb_proc_t *proc;
++	VALUE iseqval;
++	GetProcPtr(body, proc);
++	iseqval = proc->block.iseq->self;
++	if (RUBY_VM_NORMAL_ISEQ_P(iseqval)) {
++        ret = iseqval;
++	}
++    }
++    else if ((iseq = rb_method_get_iseq(body)) != 0) {
++	ret = iseq->self;
++    }
++
++    return ret;
++}
++
++static VALUE
+ iseq_s_disasm(VALUE klass, VALUE body)
+ {
+     VALUE ret = Qnil;
+@@ -1498,5 +1523,6 @@
+     rb_define_singleton_method(rb_cISeq, "compile_option=", iseq_s_compile_option_set, 1);
+     rb_define_singleton_method(rb_cISeq, "disasm", iseq_s_disasm, 1);
+     rb_define_singleton_method(rb_cISeq, "disassemble", iseq_s_disasm, 1);
++    rb_define_singleton_method(rb_cISeq, "from_method", iseq_s_get_from_method, 1);
+ }

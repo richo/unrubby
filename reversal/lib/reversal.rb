@@ -36,7 +36,7 @@ module Reversal
   def decompile_into(iseq, klass)
     decompiled = self.decompile(iseq)
     @@klassmap[klass][:methods] << decompiled
-    maybe_dump_iseq(iseq)
+    # maybe_dump_iseq(iseq)
   end
   module_function :decompile_into
 

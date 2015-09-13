@@ -63,7 +63,9 @@ module Reversal
     # If it's just top-level code, then there are no args - just decompile
     # the body straight away
     def to_ir_class(iseq)
+      @sexps = []
       decompile_body
+      @sexps.sort_by(&:length).first
     end
 
     ##
@@ -177,7 +179,9 @@ module Reversal
         end
         instruction = next_instruction_number(inst, instruction)
       end
-      r(:list, *@stack)
+      ret = r(:list, *@stack)
+      @sexps << ret unless @sexps.nil?
+      ret
     end
 
   end

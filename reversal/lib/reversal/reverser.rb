@@ -29,6 +29,12 @@ module Reversal
       reset!
     end
 
+    def debug(msg)
+      if ENV.include? "YOLO"
+        $stderr.puts msg
+      end
+    end
+
     def reset!
       @stack = []
       @else_stack = []
@@ -39,7 +45,9 @@ module Reversal
     def to_ir
       reset!
       # dispatch on the iseq type
-      self.__send__("to_ir_#{@iseq.type}".to_sym, @iseq)
+      ret = self.__send__("to_ir_#{@iseq.type}".to_sym, @iseq)
+      debug "to_ir length #{ret.length}"
+      ret
     end
 
     def to_ir_block(iseq)
@@ -96,6 +104,7 @@ module Reversal
     ##
     # Pops a node from the stack, as a decompiled string
     def pop(n = 1)
+      debug "pop from stack: #{@stack.inspect}"
       if @stack.empty?
         raise "Popped an empty stack"
       elsif n == 1
@@ -163,6 +172,7 @@ module Reversal
       iseq = @iseq
       while instruction < stop do
         inst = iseq.body[instruction]
+        debug "-> #{inst.inspect}"
         #p inst, @stack
         #puts "Instruction #{instruction} #{inst.inspect} #{@stack.inspect}"
         case inst
@@ -174,6 +184,7 @@ module Reversal
         when Array
           # [:instruction, *args]
           # call "decompile_#{instruction}"
+          debug "d: #{inst.first}"
           method = "decompile_#{inst.first}".to_sym
           send(method, inst, instruction)
         end

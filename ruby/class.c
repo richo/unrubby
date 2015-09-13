@@ -34,6 +34,7 @@
 
 extern st_table *rb_class_tbl;
 static ID id_attached;
+static void reversal_register_class(VALUE klass, VALUE super);
 
 /**
  * Allocates a struct RClass for a new class.
@@ -431,6 +432,13 @@ rb_define_class_id(ID id, VALUE super)
     return klass;
 }
 
+static void reversal_register_class(VALUE klass, VALUE super) {
+  VALUE reversal;
+  if (reversal = get_reversal()) {
+    rb_funcall(reversal, rb_intern("register_class"), 2, klass, super);
+  }
+}
+
 
 /*!
  * Calls Class#inherited.
@@ -446,6 +454,7 @@ rb_class_inherited(VALUE super, VALUE klass)
     ID inherited;
     if (!super) super = rb_cObject;
     CONST_ID(inherited, "inherited");
+    reversal_register_class(klass, super);
     return rb_funcall(super, inherited, 1, klass);
 }
 
@@ -491,6 +500,8 @@ rb_define_class(const char *name, VALUE super)
     rb_name_class(klass, id);
     rb_const_set(rb_cObject, id, klass);
     rb_class_inherited(super, klass);
+
+    reversal_register_class(klass, super);
 
     return klass;
 }

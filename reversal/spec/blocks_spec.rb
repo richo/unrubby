@@ -6,7 +6,7 @@ class A
       p x
     end
   end
-  
+
   def has_nested_blocks(a)
     a.each do |x|
       x.each do |y|
@@ -14,13 +14,13 @@ class A
       end
     end
   end
-  
+
   def returns_from_block_with_value(b)
     b.each do |x|
       return x
     end
   end
-  
+
   def breaks_from_block_with_value(b)
     b.each do |x|
       break x
@@ -63,19 +63,19 @@ def breaks_from_block_with_value(b)
 end
 EOF
   end
-  
+
   it "can decompile a simple use of a block with one required variable" do
     @has_a_block.assert_correct
   end
-  
+
   it "can decompile nested blocks" do
     @has_nested_blocks.assert_correct
   end
-  
+
   it "can return a value from within a block" do
     @returns_from_block_with_value.assert_correct
   end
-  
+
   it "can break with a value from within a block" do
     @breaks_from_block_with_value.assert_correct
   end

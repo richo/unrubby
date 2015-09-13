@@ -18,7 +18,7 @@ require 'reversal/reverser'
 
 module Reversal
   VERSION = "0.9.0"
-  
+
   class << self
     def decompile(iseq)
       Reverser.new(iseq).to_ir.to_s

@@ -4,67 +4,67 @@ class A
   def plus(a, b)
     a + b
   end
-  
+
   def minus(a, b)
     a - b
   end
-  
+
   def mult(a, b)
     a * b
   end
-  
+
   def div(a, b)
     a / b
   end
-  
+
   def mod(a, b)
     a % b
   end
-  
+
   def eq(a, b)
     a == b
   end
-  
+
   def lt(a, b)
     a < b
   end
-  
+
   def lte(a, b)
     a <= b
   end
-  
+
   def gt(a, b)
     a > b
   end
-  
+
   def gte(a, b)
     a >= b
   end
-  
+
   def ltlt(a, b)
     a << b
   end
-  
+
   def aref(arr, key)
     arr[key]
   end
-  
+
   def aset(arr, key, val)
     arr[key] = val
   end
-  
+
   def regexpmatch(a, b)
     a =~ /constant/
   end
-  
+
   def regexpmatch2(a, b)
     a =~ b
   end
-  
+
   def test_not(thing)
     !thing
   end
-  
+
   def spaceship(a, b)
     a <=> b
   end
@@ -167,71 +167,71 @@ def spaceship(a, b)
 end
 EOF
   end
-  
+
   it "can decompile a simple addition of local variables" do
     @plus_case.assert_correct
   end
-  
+
   it "can decompile a simple subtraction of local variables" do
     @minus_case.assert_correct
   end
-  
+
   it "can decompile a simple multiplication of local variables" do
     @mult_case.assert_correct
   end
-  
+
   it "can decompile a simple division of local variables" do
     @div_case.assert_correct
   end
-  
+
   it "can decompile a simple modulus of local variables" do
     @mod_case.assert_correct
   end
-  
+
   it "can decompile a simple equality comparison of local variables" do
     @eq_case.assert_correct
   end
-  
+
   it "can decompile a simple less-than comparison of local variables" do
     @lt_case.assert_correct
   end
-  
+
   it "can decompile a simple less-than-or-equal comparison of local variables" do
     @lte_case.assert_correct
   end
-  
+
   it "can decompile a simple greater-than comparison of local variables" do
     @gt_case.assert_correct
   end
-  
+
   it "can decompile a simple greater-than-or-equal comparison of local variables" do
     @gte_case.assert_correct
   end
-  
+
   it "can decompile a simple left-shift of local variables" do
     @ltlt_case.assert_correct
   end
-  
+
   it "can decompile a simple array-style-reference operator of local variables" do
     @aref_case.assert_correct
   end
-  
+
   it "can decompile a simple array-style-assignment operator of local variables" do
     @aset_case.assert_correct
   end
-  
+
   it "can decompile a simple regexp-matching operator against a constant regexp" do
     @regexpmatch.assert_correct
   end
-  
+
   it "can decompile a simple regexp-matching operator of local variables" do
     @regexpmatch2.assert_correct
   end
-  
+
   it "can decompile a simple not operator on a local variable" do
     @test_not.assert_correct
   end
-  
+
   it "can decompile the shapeship operator" do
     @spaceship.assert_correct
   end

@@ -72,7 +72,7 @@ module Hello
 end
 RESULT
   end
-  
+
   it "decompiles a complex nesting of modules, classes, definitions, and blocks" do
     @complex_nesting.assert_correct
   end

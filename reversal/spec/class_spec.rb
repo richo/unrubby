@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "Class Reversal" do
-  
+
   before do
     @empty_class = CompiledDecompilationTestCase.new <<CLASS, <<RESULT
 class A
@@ -120,45 +120,45 @@ module Hello
 end
 RESULT
 
-    
+
   end
-  
+
   it "decompiles an empty class" do
     @empty_class.assert_correct
   end
-  
+
   it "decompiles a class with some executable code (but no defs)" do
     @nonempty_class.assert_correct
   end
-  
+
   it "decompiles classes with bases" do
     @class_with_base.assert_correct
   end
-  
+
   it "decompiles a simple module" do
     @simple_module.assert_correct
   end
-  
+
   it "decompiles access to singleton classes" do
     @simple_singleton_class.assert_correct
   end
-  
+
   it "decompiles a class with a method" do
     @class_with_method.assert_correct
   end
-  
+
   it "decompiles a class with a singleton method (`def self.meth` syntax)" do
     @class_with_singleton_method.assert_correct
   end
-  
+
   it "decompiles a class calling `include`" do
     @class_include_call.assert_correct
   end
-  
+
   it "decompiles longer singleton classes" do
     @longer_singleton_class.assert_correct
   end
-  
+
   it "decompiles longer modules" do
     @longer_module.assert_correct
   end

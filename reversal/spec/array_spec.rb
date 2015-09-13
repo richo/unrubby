@@ -1,26 +1,26 @@
 require 'spec_helper'
 
-class A  
+class A
   def makes_empty_array
     []
   end
-  
+
   def uses_a_constant_array
     [1, 2, 3]
   end
-  
+
   def builds_a_constant_array
     [1, 2, "three"]
   end
-  
+
   def slightly_tricker_array(z)
     [x, y, z]
   end
-  
+
   def splatted_array(arr)
     [*arr, 1, 2]
   end
-  
+
   def word_syntax_array
     %w[hello world "michael"]
   end
@@ -50,7 +50,7 @@ def slightly_tricker_array(z)
   [x, y, z]
 end
 EOF
-  
+
     # not yet an optimal decompilation
     @splatted_array = DecompilationTestCase.new(A, :splatted_array, <<-EOF)
 def splatted_array(arr)
@@ -72,19 +72,19 @@ EOF
   it "can decompile an array of constants" do
     @uses_a_constant_array.assert_correct
   end
-  
+
   it "can build an array of different types" do
     @builds_a_constant_array.assert_correct
   end
-  
+
   it "can build with method calls and local variables" do
     @slightly_tricker_array.assert_correct
   end
-  
+
   it "can handle an array splatted into a literal array" do
     @splatted_array.assert_correct
   end
-  
+
   it "can break up %w[] syntax arrays" do
     @word_syntax_array.assert_correct
   end

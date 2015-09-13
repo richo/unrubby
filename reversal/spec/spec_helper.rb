@@ -12,12 +12,12 @@ class DecompilationTestCase
     @reverser = Reversal::Reverser.new(@seq)
     @result = result.strip
   end
-  
+
   def assert_correct
     assert_correct_ignoring_indentation
     @reverser.to_ir.to_s.should.equal @result
   end
-  
+
   def assert_correct_ignoring_indentation
     decompiled = @reverser.to_ir.to_s.split("\n").map {|x| x.to_s.lstrip}.join("\n")
     result     = @result.split("\n").map {|x| x.lstrip}.join("\n")

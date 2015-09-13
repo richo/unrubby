@@ -5,11 +5,11 @@ class A
   def uses_a_constant_range
     1..10
   end
-  
+
   def builds_a_simple_range
     x..y
   end
-  
+
   def builds_an_exclusive_range
     hello...world
   end
@@ -40,11 +40,11 @@ EOF
   it "can decompile an range of constants" do
     @uses_a_constant_range.assert_correct
   end
-  
+
   it "can build a simple inclusive range" do
     @builds_a_simple_range.assert_correct
   end
-  
+
   it "can build a simple exclusive range" do
     @builds_an_exclusive_range.assert_correct
   end

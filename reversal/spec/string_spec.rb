@@ -4,7 +4,7 @@ class A
   def uses_a_string
     var = "a string"
   end
-  
+
   def interpolates_a_string
     "hello #{world_method}"
   end
@@ -30,7 +30,7 @@ EOF
   it "can decompile a simple expression with a string" do
     @uses_a_string_case.assert_correct
   end
-  
+
   it "interpolates a simple string" do
     @interpolates_a_string_case.assert_correct
   end

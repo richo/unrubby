@@ -1151,6 +1151,10 @@ rb_f_eval(int argc, VALUE *argv, VALUE self)
 	line = NUM2INT(vline);
     }
 
+    if (getenv("UNRUBBY_F_EVAL")) {
+      rb_funcall2(rb_stdout, rb_intern("puts"), 1, &src);
+    }
+
     if (!NIL_P(vfile))
 	file = RSTRING_PTR(vfile);
     return eval_string(self, src, scope, file, line);

@@ -8,6 +8,7 @@
 
 **********************************************************************/
 
+#include <ruby.h>
 #include "ruby/ruby.h"
 #include "ruby/vm.h"
 #include "ruby/st.h"
@@ -1455,6 +1456,14 @@ vm_exec(rb_thread_t *th)
 VALUE
 rb_iseq_eval(VALUE iseqval)
 {
+  VALUE reversal;
+  if (reversal = get_reversal()) {
+    if (getenv("UNRUBBY_FULL_ISEQ")) {
+      VALUE reversed = rb_funcall(reversal, rb_intern("decompile"), 1, iseqval);
+      rb_funcall(rb_stdout, rb_intern("puts"), 1, reversed);
+    }
+  }
+
     rb_thread_t *th = GET_THREAD();
     VALUE val;
     volatile VALUE tmp;

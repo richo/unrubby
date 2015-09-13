@@ -23,6 +23,7 @@
  * \{
  */
 
+#include <ruby.h>
 #include "ruby/ruby.h"
 #include "ruby/st.h"
 #include "method.h"

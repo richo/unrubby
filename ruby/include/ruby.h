@@ -32,5 +32,6 @@
 #include "ruby/ruby.h"
 
 extern int rubby;
+VALUE get_reversal(void);
 
 #endif /* RUBY_H */

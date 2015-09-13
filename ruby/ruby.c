@@ -46,6 +46,7 @@
 # define MAXPATHLEN 1024
 #endif
 
+#include <ruby.h>
 #include "ruby/util.h"
 
 #ifndef HAVE_STDLIB_H
@@ -1877,4 +1878,19 @@ ruby_sysinit(int *argc, char ***argv)
     dln_argv0 = origarg.argv[0];
 #endif
     fill_standard_fds();
+}
+
+/* If we're in rubby, and reversal is loaded, return a reference to Reversal.
+ * Otherwise return NULL
+ */
+VALUE get_reversal(void) {
+  if (rubby) {
+    if (rb_const_defined(rb_cObject, rb_intern("Reversal"))) {
+      VALUE reversal = rb_path2class("Reversal");
+      if (rb_const_defined(reversal, rb_intern("LOADED"))) {
+        return reversal;
+      }
+    }
+  }
+  return NULL;
 }

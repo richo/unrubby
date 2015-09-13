@@ -410,7 +410,56 @@ module Reversal
       arg, receiver = pop, pop
       push r(:infix, Reverser::OPERATOR_LOOKUP[inst.first], [receiver, arg])
     end
-    
+
+    ###############################
+    ### Begin unrubby jank
+    ###############################
+
+    def decompile_trace(inst, line_no)
+    end
+
+    def decompile_leave(inst, line_no)
+    end
+
+    def decompile_putobject_OP_INT2FIX_O_1_C_(inst, line_no)
+      push r(:lit, 1)
+    end
+
+    def decompile_setlocal_OP__WC__0(inst, line_no)
+      value = pop
+      remove_useless_dup unless @iseq.type == :top
+      push r(:setvar, locals[1], value)
+    end
+
+    def decompile_getlocal_OP__WC__0(inst, line_no)
+      push r(:getvar, get_local(inst[1]))
+    end
+
+
+    def decompile_pop(inst, line_no)
+      # pop #lol?
+    end
+
+    def decompile_setinlinecache(inst, line_no)
+    end
+
+    def decompile_nop(inst, line_no)
+    end
+
+    def decompile_dupn(inst, line_no)
+      assert(inst.length == 2, "incorrect args")
+      @stack[-(inst[1])..-1].each do |item|
+        push item
+      end
+    end
+
+    def decompile_expandarray(inst, line_no)
+    end
+
+    def assert(pred, msg)
+      raise msg unless pred
+    end
+
     Reverser::OPERATOR_LOOKUP.keys.each do |operator|
       alias_method "decompile_#{operator}".to_sym, :decompile_operator
     end

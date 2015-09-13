@@ -20,6 +20,7 @@ struct unixsock_arg {
 static VALUE
 unixsock_connect_internal(VALUE a)
 {
+UNRUBBY_SOCKET_HACK;
     struct unixsock_arg *arg = (struct unixsock_arg *)a;
     return (VALUE)rsock_connect(arg->fd, (struct sockaddr*)arg->sockaddr,
 			        arg->sockaddrlen, 0);
@@ -28,6 +29,7 @@ unixsock_connect_internal(VALUE a)
 VALUE
 rsock_init_unixsock(VALUE sock, VALUE path, int server)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_un sockaddr;
     socklen_t sockaddrlen;
     int fd, status;
@@ -98,6 +100,7 @@ rsock_init_unixsock(VALUE sock, VALUE path, int server)
 static VALUE
 unix_init(VALUE sock, VALUE path)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_init_unixsock(sock, path, 0);
 }
 
@@ -114,6 +117,7 @@ unix_init(VALUE sock, VALUE path)
 static VALUE
 unix_path(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
 
     GetOpenFile(sock, fptr);
@@ -155,6 +159,7 @@ unix_path(VALUE sock)
 static VALUE
 unix_recvfrom(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_s_recvfrom(sock, argc, argv, RECV_UNIX);
 }
 
@@ -179,6 +184,7 @@ struct iomsg_arg {
 static VALUE
 sendmsg_blocking(void *data)
 {
+UNRUBBY_SOCKET_HACK;
     struct iomsg_arg *arg = data;
     return sendmsg(arg->fd, &arg->msg, 0);
 }
@@ -202,6 +208,7 @@ sendmsg_blocking(void *data)
 static VALUE
 unix_send_io(VALUE sock, VALUE val)
 {
+UNRUBBY_SOCKET_HACK;
     int fd;
     rb_io_t *fptr;
     struct iomsg_arg arg;
@@ -269,6 +276,7 @@ unix_send_io(VALUE sock, VALUE val)
 static VALUE
 recvmsg_blocking(void *data)
 {
+UNRUBBY_SOCKET_HACK;
     struct iomsg_arg *arg = data;
     return recvmsg(arg->fd, &arg->msg, 0);
 }
@@ -295,6 +303,7 @@ recvmsg_blocking(void *data)
 static VALUE
 unix_recv_io(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE klass, mode;
     rb_io_t *fptr;
     struct iomsg_arg arg;
@@ -422,6 +431,7 @@ unix_recv_io(int argc, VALUE *argv, VALUE sock)
 static VALUE
 unix_addr(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_un addr;
     socklen_t len = (socklen_t)sizeof addr;
@@ -448,6 +458,7 @@ unix_addr(VALUE sock)
 static VALUE
 unix_peeraddr(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_un addr;
     socklen_t len = (socklen_t)sizeof addr;
@@ -482,6 +493,7 @@ unix_peeraddr(VALUE sock)
 static VALUE
 unix_s_socketpair(int argc, VALUE *argv, VALUE klass)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE domain, type, protocol;
     VALUE args[3];
 
@@ -503,6 +515,7 @@ unix_s_socketpair(int argc, VALUE *argv, VALUE klass)
 void
 rsock_init_unixsocket(void)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef HAVE_SYS_UN_H
     /*
      * Document-class: UNIXSocket < BasicSocket

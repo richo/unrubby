@@ -201,6 +201,7 @@ const
 char *
 gai_strerror(int ecode)
 {
+UNRUBBY_SOCKET_HACK;
 	if (ecode < 0 || ecode > EAI_MAX)
 		ecode = EAI_MAX;
 	return (char *)ai_errlist[ecode];
@@ -210,6 +211,7 @@ gai_strerror(int ecode)
 void
 freeaddrinfo(struct addrinfo *ai)
 {
+UNRUBBY_SOCKET_HACK;
 	struct addrinfo *next;
 
 	do {
@@ -224,6 +226,7 @@ freeaddrinfo(struct addrinfo *ai)
 static int
 str_isnumber(const char *p)
 {
+UNRUBBY_SOCKET_HACK;
 	char *q = (char *)p;
 	while (*q) {
 		if (! isdigit(*q))
@@ -238,6 +241,7 @@ str_isnumber(const char *p)
 static int
 inet_pton(int af, const char *hostname, void *pton)
 {
+UNRUBBY_SOCKET_HACK;
 	struct in_addr in;
 
 #ifdef HAVE_INET_ATON
@@ -266,6 +270,7 @@ inet_pton(int af, const char *hostname, void *pton)
 int
 getaddrinfo(const char *hostname, const char *servname, const struct addrinfo *hints, struct addrinfo **res)
 {
+UNRUBBY_SOCKET_HACK;
 	struct addrinfo sentinel;
 	struct addrinfo *top = NULL;
 	struct addrinfo *cur;
@@ -531,6 +536,7 @@ getaddrinfo(const char *hostname, const char *servname, const struct addrinfo *h
 static int
 get_name(const char *addr, const struct afd *afd, struct addrinfo **res, char *numaddr, struct addrinfo *pai, int port0)
 {
+UNRUBBY_SOCKET_HACK;
 	u_short port = port0 & 0xffff;
 	struct hostent *hp;
 	struct addrinfo *cur;
@@ -571,6 +577,7 @@ get_name(const char *addr, const struct afd *afd, struct addrinfo **res, char *n
 static int
 get_addr(const char *hostname, int af, struct addrinfo **res, struct addrinfo *pai, int port0)
 {
+UNRUBBY_SOCKET_HACK;
 	u_short port = port0 & 0xffff;
 	struct addrinfo sentinel;
 	struct hostent *hp;

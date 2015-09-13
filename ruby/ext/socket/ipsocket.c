@@ -24,6 +24,7 @@ struct inetsock_arg
 static VALUE
 inetsock_cleanup(struct inetsock_arg *arg)
 {
+UNRUBBY_SOCKET_HACK;
     if (arg->remote.res) {
 	freeaddrinfo(arg->remote.res);
 	arg->remote.res = 0;
@@ -41,6 +42,7 @@ inetsock_cleanup(struct inetsock_arg *arg)
 static VALUE
 init_inetsock_internal(struct inetsock_arg *arg)
 {
+UNRUBBY_SOCKET_HACK;
     int type = arg->type;
     struct addrinfo *res;
     int fd, status = 0;
@@ -120,6 +122,7 @@ VALUE
 rsock_init_inetsock(VALUE sock, VALUE remote_host, VALUE remote_serv,
 	            VALUE local_host, VALUE local_serv, int type)
 {
+/* UNRUBBY_SOCKET_HACK; */
     struct inetsock_arg arg;
     arg.sock = sock;
     arg.remote.host = remote_host;
@@ -139,6 +142,7 @@ static ID id_numeric, id_hostname;
 int
 rsock_revlookup_flag(VALUE revlookup, int *norevlookup)
 {
+UNRUBBY_SOCKET_HACK;
 #define return_norevlookup(x) {*norevlookup = (x); return 1;}
     ID id;
 
@@ -183,6 +187,7 @@ rsock_revlookup_flag(VALUE revlookup, int *norevlookup)
 static VALUE
 ip_addr(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_storage addr;
     socklen_t len = (socklen_t)sizeof addr;
@@ -224,6 +229,7 @@ ip_addr(int argc, VALUE *argv, VALUE sock)
 static VALUE
 ip_peeraddr(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_storage addr;
     socklen_t len = (socklen_t)sizeof addr;
@@ -262,6 +268,7 @@ ip_peeraddr(int argc, VALUE *argv, VALUE sock)
 static VALUE
 ip_recvfrom(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_s_recvfrom(sock, argc, argv, RECV_IP);
 }
 
@@ -278,6 +285,7 @@ ip_recvfrom(int argc, VALUE *argv, VALUE sock)
 static VALUE
 ip_s_getaddress(VALUE obj, VALUE host)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_storage addr;
     struct addrinfo *res = rsock_addrinfo(host, Qnil, SOCK_STREAM, 0);
 
@@ -291,6 +299,7 @@ ip_s_getaddress(VALUE obj, VALUE host)
 void
 rsock_init_ipsocket(void)
 {
+UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: IPSocket < BasicSocket
      *

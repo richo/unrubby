@@ -24,6 +24,7 @@
 static VALUE
 bsock_s_for_fd(VALUE klass, VALUE fd)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     VALUE sock = rsock_init_sock(rb_obj_alloc(klass), NUM2INT(fd));
 
@@ -62,6 +63,7 @@ bsock_s_for_fd(VALUE klass, VALUE fd)
 static VALUE
 bsock_shutdown(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE howto;
     int how;
     rb_io_t *fptr;
@@ -98,6 +100,7 @@ bsock_shutdown(int argc, VALUE *argv, VALUE sock)
 static VALUE
 bsock_close_read(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
 
     if (rb_safe_level() >= 4 && !OBJ_TAINTED(sock)) {
@@ -131,6 +134,7 @@ bsock_close_read(VALUE sock)
 static VALUE
 bsock_close_write(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
 
     if (rb_safe_level() >= 4 && !OBJ_TAINTED(sock)) {
@@ -206,6 +210,7 @@ bsock_close_write(VALUE sock)
 static VALUE
 bsock_setsockopt(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE lev, optname, val;
     int family, level, option;
     rb_io_t *fptr;
@@ -316,6 +321,7 @@ bsock_setsockopt(int argc, VALUE *argv, VALUE sock)
 static VALUE
 bsock_getsockopt(VALUE sock, VALUE lev, VALUE optname)
 {
+UNRUBBY_SOCKET_HACK;
     int level, option;
     socklen_t len;
     char *buf;
@@ -356,6 +362,7 @@ bsock_getsockopt(VALUE sock, VALUE lev, VALUE optname)
 static VALUE
 bsock_getsockname(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_storage buf;
     socklen_t len = (socklen_t)sizeof buf;
     socklen_t len0 = len;
@@ -387,6 +394,7 @@ bsock_getsockname(VALUE sock)
 static VALUE
 bsock_getpeername(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_storage buf;
     socklen_t len = (socklen_t)sizeof buf;
     socklen_t len0 = len;
@@ -425,6 +433,7 @@ bsock_getpeername(VALUE sock)
 static VALUE
 bsock_getpeereid(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
 #if defined(HAVE_GETPEEREID)
     rb_io_t *fptr;
     uid_t euid;
@@ -477,6 +486,7 @@ bsock_getpeereid(VALUE self)
 static VALUE
 bsock_local_address(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_storage buf;
     socklen_t len = (socklen_t)sizeof buf;
     socklen_t len0 = len;
@@ -511,6 +521,7 @@ bsock_local_address(VALUE sock)
 static VALUE
 bsock_remote_address(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_storage buf;
     socklen_t len = (socklen_t)sizeof buf;
     socklen_t len0 = len;
@@ -543,6 +554,7 @@ bsock_remote_address(VALUE sock)
 VALUE
 rsock_bsock_send(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     struct rsock_send_arg arg;
     VALUE flags, to;
     rb_io_t *fptr;
@@ -592,6 +604,7 @@ rsock_bsock_send(int argc, VALUE *argv, VALUE sock)
 static VALUE
 bsock_do_not_reverse_lookup(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
 
     GetOpenFile(sock, fptr);
@@ -613,6 +626,7 @@ bsock_do_not_reverse_lookup(VALUE sock)
 static VALUE
 bsock_do_not_reverse_lookup_set(VALUE sock, VALUE state)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
 
     rb_secure(4);
@@ -648,6 +662,7 @@ bsock_do_not_reverse_lookup_set(VALUE sock, VALUE state)
 static VALUE
 bsock_recv(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_s_recvfrom(sock, argc, argv, RECV_RECV);
 }
 
@@ -699,6 +714,7 @@ bsock_recv(int argc, VALUE *argv, VALUE sock)
 static VALUE
 bsock_recv_nonblock(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_s_recvfrom_nonblock(sock, argc, argv, RECV_RECV);
 }
 
@@ -713,6 +729,7 @@ bsock_recv_nonblock(int argc, VALUE *argv, VALUE sock)
 static VALUE
 bsock_do_not_rev_lookup(void)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_do_not_reverse_lookup?Qtrue:Qfalse;
 }
 
@@ -735,6 +752,7 @@ bsock_do_not_rev_lookup(void)
 static VALUE
 bsock_do_not_rev_lookup_set(VALUE self, VALUE val)
 {
+UNRUBBY_SOCKET_HACK;
     rb_secure(4);
     rsock_do_not_reverse_lookup = RTEST(val);
     return val;
@@ -743,6 +761,7 @@ bsock_do_not_rev_lookup_set(VALUE self, VALUE val)
 void
 rsock_init_basicsocket(void)
 {
+UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: BasicSocket < IO
      *

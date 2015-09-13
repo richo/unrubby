@@ -118,6 +118,7 @@ static struct afd {
 static const char *
 inet_ntop(int af, const void *addr, char *numaddr, size_t numaddr_len)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef HAVE_INET_NTOA
 	struct in_addr in;
 	memcpy(&in.s_addr, addr, sizeof(in.s_addr));
@@ -135,6 +136,7 @@ inet_ntop(int af, const void *addr, char *numaddr, size_t numaddr_len)
 int
 getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host, socklen_t hostlen, char *serv, socklen_t servlen, int flags)
 {
+UNRUBBY_SOCKET_HACK;
 	struct afd *afd;
 	struct hostent *hp;
 	u_short port;

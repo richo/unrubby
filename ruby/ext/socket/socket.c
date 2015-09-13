@@ -13,6 +13,7 @@
 static void
 setup_domain_and_type(VALUE domain, int *dv, VALUE type, int *tv)
 {
+UNRUBBY_SOCKET_HACK;
     *dv = rsock_family_arg(domain);
     *tv = rsock_socktype_arg(type);
 }
@@ -39,6 +40,7 @@ setup_domain_and_type(VALUE domain, int *dv, VALUE type, int *tv)
 static VALUE
 sock_initialize(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE domain, type, protocol;
     int fd;
     int d, t;
@@ -59,18 +61,21 @@ sock_initialize(int argc, VALUE *argv, VALUE sock)
 static VALUE
 io_call_close(VALUE io)
 {
+UNRUBBY_SOCKET_HACK;
     return rb_funcall(io, rb_intern("close"), 0, 0);
 }
 
 static VALUE
 io_close(VALUE io)
 {
+UNRUBBY_SOCKET_HACK;
     return rb_rescue(io_call_close, io, 0, 0);
 }
 
 static VALUE
 pair_yield(VALUE pair)
 {
+UNRUBBY_SOCKET_HACK;
     return rb_ensure(rb_yield, pair, io_close, rb_ary_entry(pair, 1));
 }
 #endif
@@ -100,6 +105,7 @@ pair_yield(VALUE pair)
 VALUE
 rsock_sock_s_socketpair(int argc, VALUE *argv, VALUE klass)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE domain, type, protocol;
     int d, t, p, sp[2];
     int ret;
@@ -248,6 +254,7 @@ rsock_sock_s_socketpair(int argc, VALUE *argv, VALUE klass)
 static VALUE
 sock_connect(VALUE sock, VALUE addr)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     int fd, n;
 
@@ -308,6 +315,7 @@ sock_connect(VALUE sock, VALUE addr)
 static VALUE
 sock_connect_nonblock(VALUE sock, VALUE addr)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     int n;
 
@@ -414,6 +422,7 @@ sock_connect_nonblock(VALUE sock, VALUE addr)
 static VALUE
 sock_bind(VALUE sock, VALUE addr)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
 
     SockAddrStringValue(addr);
@@ -497,6 +506,7 @@ sock_bind(VALUE sock, VALUE addr)
 VALUE
 rsock_sock_listen(VALUE sock, VALUE log)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     int backlog;
 
@@ -617,6 +627,7 @@ rsock_sock_listen(VALUE sock, VALUE log)
 static VALUE
 sock_recvfrom(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_s_recvfrom(sock, argc, argv, RECV_SOCKET);
 }
 
@@ -685,6 +696,7 @@ sock_recvfrom(int argc, VALUE *argv, VALUE sock)
 static VALUE
 sock_recvfrom_nonblock(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_s_recvfrom_nonblock(sock, argc, argv, RECV_SOCKET);
 }
 
@@ -705,6 +717,7 @@ sock_recvfrom_nonblock(int argc, VALUE *argv, VALUE sock)
 static VALUE
 sock_accept(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     VALUE sock2;
     struct sockaddr_storage buf;
@@ -770,6 +783,7 @@ sock_accept(VALUE sock)
 static VALUE
 sock_accept_nonblock(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     VALUE sock2;
     struct sockaddr_storage buf;
@@ -821,6 +835,7 @@ sock_accept_nonblock(VALUE sock)
 static VALUE
 sock_sysaccept(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     VALUE sock2;
     struct sockaddr_storage buf;
@@ -847,6 +862,7 @@ sock_sysaccept(VALUE sock)
 static VALUE
 sock_gethostname(VALUE obj)
 {
+UNRUBBY_SOCKET_HACK;
 #ifndef HOST_NAME_MAX
 #  define HOST_NAME_MAX 1024
 #endif
@@ -867,6 +883,7 @@ sock_gethostname(VALUE obj)
 static VALUE
 sock_gethostname(VALUE obj)
 {
+UNRUBBY_SOCKET_HACK;
     struct utsname un;
 
     rb_secure(3);
@@ -881,6 +898,7 @@ sock_gethostname(VALUE obj)
 static VALUE
 make_addrinfo(struct addrinfo *res0, int norevlookup)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE base, ary;
     struct addrinfo *res;
 
@@ -904,6 +922,7 @@ make_addrinfo(struct addrinfo *res0, int norevlookup)
 static VALUE
 sock_sockaddr(struct sockaddr *addr, size_t len)
 {
+UNRUBBY_SOCKET_HACK;
     char *ptr;
 
     switch (addr->sa_family) {
@@ -936,6 +955,7 @@ sock_sockaddr(struct sockaddr *addr, size_t len)
 static VALUE
 sock_s_gethostbyname(VALUE obj, VALUE host)
 {
+UNRUBBY_SOCKET_HACK;
     rb_secure(3);
     return rsock_make_hostent(host, rsock_addrinfo(host, Qnil, SOCK_STREAM, AI_CANONNAME), sock_sockaddr);
 }
@@ -952,6 +972,7 @@ sock_s_gethostbyname(VALUE obj, VALUE host)
 static VALUE
 sock_s_gethostbyaddr(int argc, VALUE *argv)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE addr, family;
     struct hostent *h;
     char **pch;
@@ -1014,6 +1035,7 @@ sock_s_gethostbyaddr(int argc, VALUE *argv)
 static VALUE
 sock_s_getservbyname(int argc, VALUE *argv)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE service, proto;
     struct servent *sp;
     long port;
@@ -1055,6 +1077,7 @@ sock_s_getservbyname(int argc, VALUE *argv)
 static VALUE
 sock_s_getservbyport(int argc, VALUE *argv)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE port, proto;
     struct servent *sp;
     long portnum;
@@ -1111,6 +1134,7 @@ sock_s_getservbyport(int argc, VALUE *argv)
 static VALUE
 sock_s_getaddrinfo(int argc, VALUE *argv)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE host, port, family, socktype, protocol, flags, ret, revlookup;
     struct addrinfo hints, *res;
     int norevlookup;
@@ -1163,6 +1187,7 @@ sock_s_getaddrinfo(int argc, VALUE *argv)
 static VALUE
 sock_s_getnameinfo(int argc, VALUE *argv)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE sa, af = Qnil, host = Qnil, port = Qnil, flags, tmp;
     char *hptr, *pptr;
     char hbuf[1024], pbuf[1024];
@@ -1303,6 +1328,7 @@ sock_s_getnameinfo(int argc, VALUE *argv)
 static VALUE
 sock_s_pack_sockaddr_in(VALUE self, VALUE port, VALUE host)
 {
+UNRUBBY_SOCKET_HACK;
     struct addrinfo *res = rsock_addrinfo(host, port, 0, 0);
     VALUE addr = rb_str_new((char*)res->ai_addr, res->ai_addrlen);
 
@@ -1329,6 +1355,7 @@ sock_s_pack_sockaddr_in(VALUE self, VALUE port, VALUE host)
 static VALUE
 sock_s_unpack_sockaddr_in(VALUE self, VALUE addr)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_in * sockaddr;
     VALUE host;
 
@@ -1369,6 +1396,7 @@ sock_s_unpack_sockaddr_in(VALUE self, VALUE addr)
 static VALUE
 sock_s_pack_sockaddr_un(VALUE self, VALUE path)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_un sockaddr;
     VALUE addr;
 
@@ -1401,6 +1429,7 @@ sock_s_pack_sockaddr_un(VALUE self, VALUE path)
 static VALUE
 sock_s_unpack_sockaddr_un(VALUE self, VALUE addr)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_un * sockaddr;
     VALUE path;
 
@@ -1427,6 +1456,7 @@ sock_s_unpack_sockaddr_un(VALUE self, VALUE addr)
 static VALUE
 sockaddr_obj(struct sockaddr *addr)
 {
+UNRUBBY_SOCKET_HACK;
     socklen_t len;
 #if defined(AF_INET6) && defined(__KAME__)
     struct sockaddr_in6 addr6;
@@ -1498,6 +1528,7 @@ sockaddr_obj(struct sockaddr *addr)
 static VALUE
 socket_s_ip_address_list(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
 #if defined(HAVE_GETIFADDRS)
     struct ifaddrs *ifp = NULL;
     struct ifaddrs *p;
@@ -1786,6 +1817,7 @@ socket_s_ip_address_list(VALUE self)
 void
 Init_socket()
 {
+UNRUBBY_SOCKET_HACK;
     rsock_init_basicsocket();
 
     /*

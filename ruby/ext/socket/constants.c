@@ -17,6 +17,7 @@ static VALUE rb_mSockConst;
 static int
 constant_arg(VALUE arg, int (*str_to_int)(const char*, long, int*), const char *errmsg)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE tmp;
     char *ptr;
     int ret;
@@ -42,6 +43,7 @@ constant_arg(VALUE arg, int (*str_to_int)(const char*, long, int*), const char *
 int
 rsock_family_arg(VALUE domain)
 {
+UNRUBBY_SOCKET_HACK;
     /* convert AF_INET, etc. */
     return constant_arg(domain, rsock_family_to_int, "unknown socket domain");
 }
@@ -49,6 +51,7 @@ rsock_family_arg(VALUE domain)
 int
 rsock_socktype_arg(VALUE type)
 {
+UNRUBBY_SOCKET_HACK;
     /* convert SOCK_STREAM, etc. */
     return constant_arg(type, rsock_socktype_to_int, "unknown socket type");
 }
@@ -56,6 +59,7 @@ rsock_socktype_arg(VALUE type)
 int
 rsock_level_arg(int family, VALUE level)
 {
+UNRUBBY_SOCKET_HACK;
     /* convert SOL_SOCKET, IPPROTO_TCP, etc. */
     if (IS_IP_FAMILY(family)) {
         return constant_arg(level, rsock_ip_level_to_int, "unknown protocol level");
@@ -68,6 +72,7 @@ rsock_level_arg(int family, VALUE level)
 int
 rsock_optname_arg(int family, int level, VALUE optname)
 {
+UNRUBBY_SOCKET_HACK;
     if (IS_IP_FAMILY(family)) {
         switch (level) {
           case SOL_SOCKET:
@@ -99,6 +104,7 @@ rsock_optname_arg(int family, int level, VALUE optname)
 int
 rsock_cmsg_type_arg(int family, int level, VALUE type)
 {
+UNRUBBY_SOCKET_HACK;
     if (IS_IP_FAMILY(family)) {
         switch (level) {
           case SOL_SOCKET:
@@ -130,6 +136,7 @@ rsock_cmsg_type_arg(int family, int level, VALUE type)
 int
 rsock_shutdown_how_arg(VALUE how)
 {
+UNRUBBY_SOCKET_HACK;
     /* convert SHUT_RD, SHUT_WR, SHUT_RDWR. */
     return constant_arg(how, rsock_shutdown_how_to_int, "unknown shutdown argument");
 }
@@ -140,6 +147,7 @@ rsock_shutdown_how_arg(VALUE how)
 void
 rsock_init_socket_constants(void)
 {
+UNRUBBY_SOCKET_HACK;
     /* constants */
     init_constants();
 }

@@ -21,6 +21,7 @@
 static VALUE
 tcp_init(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE remote_host, remote_serv;
     VALUE local_host, local_serv;
 
@@ -34,6 +35,7 @@ tcp_init(int argc, VALUE *argv, VALUE sock)
 static VALUE
 tcp_sockaddr(struct sockaddr *addr, size_t len)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_make_ipaddr(addr);
 }
 
@@ -50,6 +52,7 @@ tcp_sockaddr(struct sockaddr *addr, size_t len)
 static VALUE
 tcp_s_gethostbyname(VALUE obj, VALUE host)
 {
+UNRUBBY_SOCKET_HACK;
     rb_secure(3);
     return rsock_make_hostent(host, rsock_addrinfo(host, Qnil, SOCK_STREAM, AI_CANONNAME),
 			tcp_sockaddr);
@@ -58,6 +61,7 @@ tcp_s_gethostbyname(VALUE obj, VALUE host)
 void
 rsock_init_tcpsocket(void)
 {
+UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: TCPSocket < IPSocket
      *

@@ -21,6 +21,7 @@
 static VALUE
 socks_init(VALUE sock, VALUE host, VALUE serv)
 {
+UNRUBBY_SOCKET_HACK;
     static int init = 0;
 
     if (init == 0) {
@@ -39,6 +40,7 @@ socks_init(VALUE sock, VALUE host, VALUE serv)
 static VALUE
 socks_s_close(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
 
     if (rb_safe_level() >= 4 && !OBJ_TAINTED(sock)) {
@@ -54,6 +56,7 @@ socks_s_close(VALUE sock)
 void
 rsock_init_sockssocket(void)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef SOCKS
     /*
      * Document-class: SOCKSSocket < TCPSocket

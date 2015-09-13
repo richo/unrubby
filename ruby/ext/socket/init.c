@@ -33,6 +33,7 @@ int rsock_do_not_reverse_lookup = 1;
 void
 rsock_raise_socket_error(const char *reason, int error)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef EAI_SYSTEM
     if (error == EAI_SYSTEM) rb_sys_fail(reason);
 #endif
@@ -42,6 +43,7 @@ rsock_raise_socket_error(const char *reason, int error)
 VALUE
 rsock_init_sock(VALUE sock, int fd)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fp;
 #ifndef _WIN32
     struct stat sbuf;
@@ -71,6 +73,7 @@ rsock_init_sock(VALUE sock, int fd)
 VALUE
 rsock_sendto_blocking(void *data)
 {
+UNRUBBY_SOCKET_HACK;
     struct rsock_send_arg *arg = data;
     VALUE mesg = arg->mesg;
     return (VALUE)sendto(arg->fd, RSTRING_PTR(mesg), RSTRING_LEN(mesg),
@@ -80,6 +83,7 @@ rsock_sendto_blocking(void *data)
 VALUE
 rsock_send_blocking(void *data)
 {
+UNRUBBY_SOCKET_HACK;
     struct rsock_send_arg *arg = data;
     VALUE mesg = arg->mesg;
     return (VALUE)send(arg->fd, RSTRING_PTR(mesg), RSTRING_LEN(mesg),
@@ -96,6 +100,7 @@ struct recvfrom_arg {
 static VALUE
 recvfrom_blocking(void *data)
 {
+UNRUBBY_SOCKET_HACK;
     struct recvfrom_arg *arg = data;
     return (VALUE)recvfrom(arg->fd, RSTRING_PTR(arg->str), RSTRING_LEN(arg->str),
 			   arg->flags, (struct sockaddr*)&arg->buf, &arg->alen);
@@ -104,6 +109,7 @@ recvfrom_blocking(void *data)
 VALUE
 rsock_s_recvfrom(VALUE sock, int argc, VALUE *argv, enum sock_recv_type from)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     VALUE str, klass;
     struct recvfrom_arg arg;
@@ -172,6 +178,7 @@ rsock_s_recvfrom(VALUE sock, int argc, VALUE *argv, enum sock_recv_type from)
 VALUE
 rsock_s_recvfrom_nonblock(VALUE sock, int argc, VALUE *argv, enum sock_recv_type from)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     VALUE str;
     struct sockaddr_storage buf;
@@ -242,6 +249,7 @@ rsock_s_recvfrom_nonblock(VALUE sock, int argc, VALUE *argv, enum sock_recv_type
 int
 rsock_socket(int domain, int type, int proto)
 {
+UNRUBBY_SOCKET_HACK;
     int fd;
 
     fd = socket(domain, type, proto);
@@ -259,6 +267,7 @@ rsock_socket(int domain, int type, int proto)
 static int
 wait_connectable(int fd)
 {
+UNRUBBY_SOCKET_HACK;
     int sockerr;
     socklen_t sockerrlen;
     int revents;
@@ -327,6 +336,7 @@ struct connect_arg {
 static VALUE
 connect_blocking(void *data)
 {
+UNRUBBY_SOCKET_HACK;
     struct connect_arg *arg = data;
     return (VALUE)connect(arg->fd, arg->sockaddr, arg->len);
 }
@@ -335,6 +345,7 @@ connect_blocking(void *data)
 static VALUE
 socks_connect_blocking(void *data)
 {
+UNRUBBY_SOCKET_HACK;
     struct connect_arg *arg = data;
     return (VALUE)Rconnect(arg->fd, arg->sockaddr, arg->len);
 }
@@ -343,6 +354,7 @@ socks_connect_blocking(void *data)
 int
 rsock_connect(int fd, const struct sockaddr *sockaddr, int len, int socks)
 {
+UNRUBBY_SOCKET_HACK;
     int status;
     rb_blocking_function_t *func = connect_blocking;
     struct connect_arg arg;
@@ -433,6 +445,7 @@ rsock_connect(int fd, const struct sockaddr *sockaddr, int len, int socks)
 static void
 make_fd_nonblock(int fd)
 {
+UNRUBBY_SOCKET_HACK;
     int flags;
 #ifdef F_GETFL
     flags = fcntl(fd, F_GETFL);
@@ -451,6 +464,7 @@ make_fd_nonblock(int fd)
 VALUE
 rsock_s_accept_nonblock(VALUE klass, rb_io_t *fptr, struct sockaddr *sockaddr, socklen_t *len)
 {
+UNRUBBY_SOCKET_HACK;
     int fd2;
     socklen_t len0 = len ? *len : 0;
 
@@ -486,6 +500,7 @@ struct accept_arg {
 static VALUE
 accept_blocking(void *data)
 {
+UNRUBBY_SOCKET_HACK;
     struct accept_arg *arg = data;
     int ret;
     socklen_t len0 = 0;
@@ -498,6 +513,7 @@ accept_blocking(void *data)
 VALUE
 rsock_s_accept(VALUE klass, int fd, struct sockaddr *sockaddr, socklen_t *len)
 {
+UNRUBBY_SOCKET_HACK;
     int fd2;
     int retry = 0;
     struct accept_arg arg;
@@ -532,6 +548,7 @@ rsock_s_accept(VALUE klass, int fd, struct sockaddr *sockaddr, socklen_t *len)
 int
 rsock_getfamily(int sockfd)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_storage ss;
     socklen_t sslen = (socklen_t)sizeof(ss);
 
@@ -545,6 +562,7 @@ rsock_getfamily(int sockfd)
 void
 rsock_init_socket_init()
 {
+UNRUBBY_SOCKET_HACK;
     /*
      * SocketError is the error class for socket.
      */

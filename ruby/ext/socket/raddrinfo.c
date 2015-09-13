@@ -26,6 +26,7 @@ static int
 ruby_getaddrinfo(const char *nodename, const char *servname,
 		 const struct addrinfo *hints, struct addrinfo **res)
 {
+UNRUBBY_SOCKET_HACK;
     struct addrinfo tmp_hints;
     int i, af, error;
 
@@ -58,6 +59,7 @@ static int
 ruby_getaddrinfo__aix(const char *nodename, const char *servname,
 		      const struct addrinfo *hints, struct addrinfo **res)
 {
+UNRUBBY_SOCKET_HACK;
     int error = getaddrinfo(nodename, servname, hints, res);
     struct addrinfo *r;
     if (error)
@@ -77,6 +79,7 @@ ruby_getnameinfo__aix(const struct sockaddr *sa, size_t salen,
 		      char *host, size_t hostlen,
 		      char *serv, size_t servlen, int flags)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_in6 *sa6;
     u_int32_t *a6;
 
@@ -104,6 +107,7 @@ static int
 ruby_getaddrinfo__darwin(const char *nodename, const char *servname,
 			 const struct addrinfo *hints, struct addrinfo **res)
 {
+UNRUBBY_SOCKET_HACK;
     /* fix [ruby-core:29427] */
     const char *tmp_servname;
     struct addrinfo tmp_hints;
@@ -157,6 +161,7 @@ struct getaddrinfo_arg
 static VALUE
 nogvl_getaddrinfo(void *arg)
 {
+UNRUBBY_SOCKET_HACK;
     int ret;
     struct getaddrinfo_arg *ptr = arg;
     ret = getaddrinfo(ptr->node, ptr->service, ptr->hints, ptr->res);
@@ -176,6 +181,7 @@ rb_getaddrinfo(const char *node, const char *service,
                const struct addrinfo *hints,
                struct addrinfo **res)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef GETADDRINFO_EMU
     return getaddrinfo(node, service, hints, res);
 #else
@@ -206,6 +212,7 @@ struct getnameinfo_arg
 static VALUE
 nogvl_getnameinfo(void *arg)
 {
+UNRUBBY_SOCKET_HACK;
     struct getnameinfo_arg *ptr = arg;
     return getnameinfo(ptr->sa, ptr->salen,
                        ptr->host, (socklen_t)ptr->hostlen,
@@ -219,6 +226,7 @@ rb_getnameinfo(const struct sockaddr *sa, socklen_t salen,
            char *host, size_t hostlen,
            char *serv, size_t servlen, int flags)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef GETADDRINFO_EMU
     return getnameinfo(sa, salen, host, hostlen, serv, servlen, flags);
 #else
@@ -239,6 +247,7 @@ rb_getnameinfo(const struct sockaddr *sa, socklen_t salen,
 static void
 make_ipaddr0(struct sockaddr *addr, char *buf, size_t len)
 {
+UNRUBBY_SOCKET_HACK;
     int error;
 
     error = rb_getnameinfo(addr, SA_LEN(addr), buf, len, NULL, 0, NI_NUMERICHOST);
@@ -250,6 +259,7 @@ make_ipaddr0(struct sockaddr *addr, char *buf, size_t len)
 VALUE
 rsock_make_ipaddr(struct sockaddr *addr)
 {
+UNRUBBY_SOCKET_HACK;
     char hbuf[1024];
 
     make_ipaddr0(addr, hbuf, sizeof(hbuf));
@@ -259,6 +269,7 @@ rsock_make_ipaddr(struct sockaddr *addr)
 static void
 make_inetaddr(unsigned int host, char *buf, size_t len)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_in sin;
 
     MEMZERO(&sin, struct sockaddr_in, 1);
@@ -271,6 +282,7 @@ make_inetaddr(unsigned int host, char *buf, size_t len)
 static int
 str_is_number(const char *p)
 {
+UNRUBBY_SOCKET_HACK;
     char *ep;
 
     if (!p || *p == '\0')
@@ -286,6 +298,7 @@ str_is_number(const char *p)
 static char*
 host_str(VALUE host, char *hbuf, size_t len, int *flags_ptr)
 {
+UNRUBBY_SOCKET_HACK;
     if (NIL_P(host)) {
         return NULL;
     }
@@ -323,6 +336,7 @@ host_str(VALUE host, char *hbuf, size_t len, int *flags_ptr)
 static char*
 port_str(VALUE port, char *pbuf, size_t len, int *flags_ptr)
 {
+UNRUBBY_SOCKET_HACK;
     if (NIL_P(port)) {
         return 0;
     }
@@ -350,6 +364,7 @@ port_str(VALUE port, char *pbuf, size_t len, int *flags_ptr)
 struct addrinfo*
 rsock_getaddrinfo(VALUE host, VALUE port, struct addrinfo *hints, int socktype_hack)
 {
+UNRUBBY_SOCKET_HACK;
     struct addrinfo* res = NULL;
     char *hostp, *portp;
     int error;
@@ -378,6 +393,7 @@ rsock_getaddrinfo(VALUE host, VALUE port, struct addrinfo *hints, int socktype_h
 struct addrinfo*
 rsock_addrinfo(VALUE host, VALUE port, int socktype, int flags)
 {
+UNRUBBY_SOCKET_HACK;
     struct addrinfo hints;
 
     MEMZERO(&hints, struct addrinfo, 1);
@@ -390,6 +406,7 @@ rsock_addrinfo(VALUE host, VALUE port, int socktype, int flags)
 VALUE
 rsock_ipaddr(struct sockaddr *sockaddr, int norevlookup)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE family, port, addr1, addr2;
     VALUE ary;
     int error;
@@ -432,6 +449,7 @@ rsock_ipaddr(struct sockaddr *sockaddr, int norevlookup)
 VALUE
 rsock_unixpath_str(struct sockaddr_un *sockaddr, socklen_t len)
 {
+UNRUBBY_SOCKET_HACK;
     char *s, *e;
     s = sockaddr->sun_path;
     e = (char *)sockaddr + len;
@@ -446,6 +464,7 @@ rsock_unixpath_str(struct sockaddr_un *sockaddr, socklen_t len)
 VALUE
 rsock_unixaddr(struct sockaddr_un *sockaddr, socklen_t len)
 {
+UNRUBBY_SOCKET_HACK;
     return rb_assoc_new(rb_str_new2("AF_UNIX"),
                         rsock_unixpath_str(sockaddr, len));
 }
@@ -453,6 +472,7 @@ rsock_unixaddr(struct sockaddr_un *sockaddr, socklen_t len)
 socklen_t
 rsock_unix_sockaddr_len(VALUE path)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef __linux__
     if (RSTRING_LEN(path) == 0) {
 	/* autobind; see unix(7) for details. */
@@ -481,6 +501,7 @@ struct hostent_arg {
 static VALUE
 make_hostent_internal(struct hostent_arg *arg)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE host = arg->host;
     struct addrinfo* addr = arg->addr;
     VALUE (*ipaddr)(struct sockaddr*, size_t) = arg->ipaddr;
@@ -524,6 +545,7 @@ make_hostent_internal(struct hostent_arg *arg)
 VALUE
 rsock_freeaddrinfo(struct addrinfo *addr)
 {
+UNRUBBY_SOCKET_HACK;
     freeaddrinfo(addr);
     return Qnil;
 }
@@ -531,6 +553,7 @@ rsock_freeaddrinfo(struct addrinfo *addr)
 VALUE
 rsock_make_hostent(VALUE host, struct addrinfo *addr, VALUE (*ipaddr)(struct sockaddr *, size_t))
 {
+UNRUBBY_SOCKET_HACK;
     struct hostent_arg arg;
 
     arg.host = host;
@@ -553,6 +576,7 @@ typedef struct {
 static void
 addrinfo_mark(void *ptr)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = ptr;
     if (rai) {
         rb_gc_mark(rai->inspectname);
@@ -565,6 +589,7 @@ addrinfo_mark(void *ptr)
 static size_t
 addrinfo_memsize(const void *ptr)
 {
+UNRUBBY_SOCKET_HACK;
     return ptr ? sizeof(rb_addrinfo_t) : 0;
 }
 
@@ -576,6 +601,7 @@ static const rb_data_type_t addrinfo_type = {
 static VALUE
 addrinfo_s_allocate(VALUE klass)
 {
+UNRUBBY_SOCKET_HACK;
     return TypedData_Wrap_Struct(klass, &addrinfo_type, 0);
 }
 
@@ -583,12 +609,14 @@ addrinfo_s_allocate(VALUE klass)
 static inline rb_addrinfo_t *
 check_addrinfo(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return rb_check_typeddata(self, &addrinfo_type);
 }
 
 static rb_addrinfo_t *
 get_addrinfo(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = check_addrinfo(self);
 
     if (!rai) {
@@ -601,6 +629,7 @@ get_addrinfo(VALUE self)
 static rb_addrinfo_t *
 alloc_addrinfo()
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = ALLOC(rb_addrinfo_t);
     memset(rai, 0, sizeof(rb_addrinfo_t));
     rai->inspectname = Qnil;
@@ -613,6 +642,7 @@ init_addrinfo(rb_addrinfo_t *rai, struct sockaddr *sa, socklen_t len,
               int pfamily, int socktype, int protocol,
               VALUE canonname, VALUE inspectname)
 {
+UNRUBBY_SOCKET_HACK;
     if ((socklen_t)sizeof(rai->addr) < len)
         rb_raise(rb_eArgError, "sockaddr string too big");
     memcpy((void *)&rai->addr, (void *)sa, len);
@@ -630,6 +660,7 @@ rsock_addrinfo_new(struct sockaddr *addr, socklen_t len,
                    int family, int socktype, int protocol,
                    VALUE canonname, VALUE inspectname)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE a;
     rb_addrinfo_t *rai;
 
@@ -644,6 +675,7 @@ call_getaddrinfo(VALUE node, VALUE service,
                  VALUE family, VALUE socktype, VALUE protocol, VALUE flags,
                  int socktype_hack)
 {
+UNRUBBY_SOCKET_HACK;
     struct addrinfo hints, *res;
 
     MEMZERO(&hints, struct addrinfo, 1);
@@ -672,6 +704,7 @@ init_addrinfo_getaddrinfo(rb_addrinfo_t *rai, VALUE node, VALUE service,
                           VALUE family, VALUE socktype, VALUE protocol, VALUE flags,
                           VALUE inspectnode, VALUE inspectservice)
 {
+UNRUBBY_SOCKET_HACK;
     struct addrinfo *res = call_getaddrinfo(node, service, family, socktype, protocol, flags, 1);
     VALUE canonname;
     VALUE inspectname = rb_str_equal(node, inspectnode) ? Qnil : make_inspectname(inspectnode, inspectservice, res);
@@ -692,6 +725,7 @@ init_addrinfo_getaddrinfo(rb_addrinfo_t *rai, VALUE node, VALUE service,
 static VALUE
 make_inspectname(VALUE node, VALUE service, struct addrinfo *res)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE inspectname = Qnil;
 
     if (res) {
@@ -737,6 +771,7 @@ make_inspectname(VALUE node, VALUE service, struct addrinfo *res)
 static VALUE
 addrinfo_firstonly_new(VALUE node, VALUE service, VALUE family, VALUE socktype, VALUE protocol, VALUE flags)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE ret;
     VALUE canonname;
     VALUE inspectname;
@@ -762,6 +797,7 @@ addrinfo_firstonly_new(VALUE node, VALUE service, VALUE family, VALUE socktype, 
 static VALUE
 addrinfo_list_new(VALUE node, VALUE service, VALUE family, VALUE socktype, VALUE protocol, VALUE flags)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE ret;
     struct addrinfo *r;
     VALUE inspectname;
@@ -796,6 +832,7 @@ addrinfo_list_new(VALUE node, VALUE service, VALUE family, VALUE socktype, VALUE
 static void
 init_unix_addrinfo(rb_addrinfo_t *rai, VALUE path, int socktype)
 {
+UNRUBBY_SOCKET_HACK;
     struct sockaddr_un un;
     socklen_t len;
 
@@ -866,6 +903,7 @@ init_unix_addrinfo(rb_addrinfo_t *rai, VALUE path, int socktype)
 static VALUE
 addrinfo_initialize(int argc, VALUE *argv, VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai;
     VALUE sockaddr_arg, sockaddr_ary, pfamily, socktype, protocol;
     int i_pfamily, i_socktype, i_protocol;
@@ -946,6 +984,7 @@ addrinfo_initialize(int argc, VALUE *argv, VALUE self)
 static int
 get_afamily(struct sockaddr *addr, socklen_t len)
 {
+UNRUBBY_SOCKET_HACK;
     if ((socklen_t)((char*)&addr->sa_family + sizeof(addr->sa_family) - (char*)addr) <= len)
         return addr->sa_family;
     else
@@ -955,12 +994,14 @@ get_afamily(struct sockaddr *addr, socklen_t len)
 static int
 ai_get_afamily(rb_addrinfo_t *rai)
 {
+UNRUBBY_SOCKET_HACK;
     return get_afamily((struct sockaddr *)&rai->addr, rai->sockaddr_len);
 }
 
 static VALUE
 inspect_sockaddr(VALUE addrinfo, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(addrinfo);
 
     if (rai->sockaddr_len == 0) {
@@ -1095,6 +1136,7 @@ inspect_sockaddr(VALUE addrinfo, VALUE ret)
 static VALUE
 addrinfo_inspect(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int internet_p;
     VALUE ret;
@@ -1175,6 +1217,7 @@ addrinfo_inspect(VALUE self)
 static VALUE
 addrinfo_inspect_sockaddr(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return inspect_sockaddr(self, rb_str_new("", 0));
 }
 
@@ -1182,6 +1225,7 @@ addrinfo_inspect_sockaddr(VALUE self)
 static VALUE
 addrinfo_mdump(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     VALUE sockaddr, afamily, pfamily, socktype, protocol, canonname, inspectname;
     int afamily_int = ai_get_afamily(rai);
@@ -1259,6 +1303,7 @@ addrinfo_mdump(VALUE self)
 static VALUE
 addrinfo_mload(VALUE self, VALUE ary)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE v;
     VALUE canonname, inspectname;
     int afamily, pfamily, socktype, protocol;
@@ -1378,6 +1423,7 @@ addrinfo_mload(VALUE self, VALUE ary)
 static VALUE
 addrinfo_afamily(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     return INT2NUM(ai_get_afamily(rai));
 }
@@ -1394,6 +1440,7 @@ addrinfo_afamily(VALUE self)
 static VALUE
 addrinfo_pfamily(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     return INT2NUM(rai->pfamily);
 }
@@ -1410,6 +1457,7 @@ addrinfo_pfamily(VALUE self)
 static VALUE
 addrinfo_socktype(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     return INT2NUM(rai->socktype);
 }
@@ -1426,6 +1474,7 @@ addrinfo_socktype(VALUE self)
 static VALUE
 addrinfo_protocol(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     return INT2NUM(rai->protocol);
 }
@@ -1444,6 +1493,7 @@ addrinfo_protocol(VALUE self)
 static VALUE
 addrinfo_to_sockaddr(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     VALUE ret;
     ret = rb_str_new((char*)&rai->addr, rai->sockaddr_len);
@@ -1469,6 +1519,7 @@ addrinfo_to_sockaddr(VALUE self)
 static VALUE
 addrinfo_canonname(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     return rai->canonname;
 }
@@ -1488,6 +1539,7 @@ addrinfo_canonname(VALUE self)
 static VALUE
 addrinfo_ip_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int family = ai_get_afamily(rai);
     return IS_IP_FAMILY(family) ? Qtrue : Qfalse;
@@ -1508,6 +1560,7 @@ addrinfo_ip_p(VALUE self)
 static VALUE
 addrinfo_ipv4_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     return ai_get_afamily(rai) == AF_INET ? Qtrue : Qfalse;
 }
@@ -1527,6 +1580,7 @@ addrinfo_ipv4_p(VALUE self)
 static VALUE
 addrinfo_ipv6_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef AF_INET6
     rb_addrinfo_t *rai = get_addrinfo(self);
     return ai_get_afamily(rai) == AF_INET6 ? Qtrue : Qfalse;
@@ -1550,6 +1604,7 @@ addrinfo_ipv6_p(VALUE self)
 static VALUE
 addrinfo_unix_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
 #ifdef AF_UNIX
     return ai_get_afamily(rai) == AF_UNIX ? Qtrue : Qfalse;
@@ -1576,6 +1631,7 @@ addrinfo_unix_p(VALUE self)
 static VALUE
 addrinfo_getnameinfo(int argc, VALUE *argv, VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     VALUE vflags;
     char hbuf[1024], pbuf[1024];
@@ -1610,6 +1666,7 @@ addrinfo_getnameinfo(int argc, VALUE *argv, VALUE self)
 static VALUE
 addrinfo_ip_unpack(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int family = ai_get_afamily(rai);
     VALUE vflags;
@@ -1637,6 +1694,7 @@ addrinfo_ip_unpack(VALUE self)
 static VALUE
 addrinfo_ip_address(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int family = ai_get_afamily(rai);
     VALUE vflags;
@@ -1662,6 +1720,7 @@ addrinfo_ip_address(VALUE self)
 static VALUE
 addrinfo_ip_port(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int family = ai_get_afamily(rai);
     int port;
@@ -1700,6 +1759,7 @@ addrinfo_ip_port(VALUE self)
 static int
 extract_in_addr(VALUE self, uint32_t *addrp)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int family = ai_get_afamily(rai);
     if (family != AF_INET) return 0;
@@ -1714,6 +1774,7 @@ extract_in_addr(VALUE self, uint32_t *addrp)
 static VALUE
 addrinfo_ipv4_private_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     uint32_t a;
     if (!extract_in_addr(self, &a)) return Qfalse;
     if ((a & 0xff000000) == 0x0a000000 || /* 10.0.0.0/8 */
@@ -1730,6 +1791,7 @@ addrinfo_ipv4_private_p(VALUE self)
 static VALUE
 addrinfo_ipv4_loopback_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     uint32_t a;
     if (!extract_in_addr(self, &a)) return Qfalse;
     if ((a & 0xff000000) == 0x7f000000) /* 127.0.0.0/8 */
@@ -1744,6 +1806,7 @@ addrinfo_ipv4_loopback_p(VALUE self)
 static VALUE
 addrinfo_ipv4_multicast_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     uint32_t a;
     if (!extract_in_addr(self, &a)) return Qfalse;
     if ((a & 0xf0000000) == 0xe0000000) /* 224.0.0.0/4 */
@@ -1756,6 +1819,7 @@ addrinfo_ipv4_multicast_p(VALUE self)
 static struct in6_addr *
 extract_in6_addr(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int family = ai_get_afamily(rai);
     if (family != AF_INET6) return NULL;
@@ -1769,6 +1833,7 @@ extract_in6_addr(VALUE self)
 static VALUE
 addrinfo_ipv6_unspecified_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_UNSPECIFIED(addr)) return Qtrue;
     return Qfalse;
@@ -1781,6 +1846,7 @@ addrinfo_ipv6_unspecified_p(VALUE self)
 static VALUE
 addrinfo_ipv6_loopback_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_LOOPBACK(addr)) return Qtrue;
     return Qfalse;
@@ -1793,6 +1859,7 @@ addrinfo_ipv6_loopback_p(VALUE self)
 static VALUE
 addrinfo_ipv6_multicast_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_MULTICAST(addr)) return Qtrue;
     return Qfalse;
@@ -1805,6 +1872,7 @@ addrinfo_ipv6_multicast_p(VALUE self)
 static VALUE
 addrinfo_ipv6_linklocal_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_LINKLOCAL(addr)) return Qtrue;
     return Qfalse;
@@ -1817,6 +1885,7 @@ addrinfo_ipv6_linklocal_p(VALUE self)
 static VALUE
 addrinfo_ipv6_sitelocal_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_SITELOCAL(addr)) return Qtrue;
     return Qfalse;
@@ -1829,6 +1898,7 @@ addrinfo_ipv6_sitelocal_p(VALUE self)
 static VALUE
 addrinfo_ipv6_v4mapped_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_V4MAPPED(addr)) return Qtrue;
     return Qfalse;
@@ -1841,6 +1911,7 @@ addrinfo_ipv6_v4mapped_p(VALUE self)
 static VALUE
 addrinfo_ipv6_v4compat_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_V4COMPAT(addr)) return Qtrue;
     return Qfalse;
@@ -1853,6 +1924,7 @@ addrinfo_ipv6_v4compat_p(VALUE self)
 static VALUE
 addrinfo_ipv6_mc_nodelocal_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_MC_NODELOCAL(addr)) return Qtrue;
     return Qfalse;
@@ -1865,6 +1937,7 @@ addrinfo_ipv6_mc_nodelocal_p(VALUE self)
 static VALUE
 addrinfo_ipv6_mc_linklocal_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_MC_LINKLOCAL(addr)) return Qtrue;
     return Qfalse;
@@ -1877,6 +1950,7 @@ addrinfo_ipv6_mc_linklocal_p(VALUE self)
 static VALUE
 addrinfo_ipv6_mc_sitelocal_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_MC_SITELOCAL(addr)) return Qtrue;
     return Qfalse;
@@ -1889,6 +1963,7 @@ addrinfo_ipv6_mc_sitelocal_p(VALUE self)
 static VALUE
 addrinfo_ipv6_mc_orglocal_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_MC_ORGLOCAL(addr)) return Qtrue;
     return Qfalse;
@@ -1901,6 +1976,7 @@ addrinfo_ipv6_mc_orglocal_p(VALUE self)
 static VALUE
 addrinfo_ipv6_mc_global_p(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_addr *addr = extract_in6_addr(self);
     if (addr && IN6_IS_ADDR_MC_GLOBAL(addr)) return Qtrue;
     return Qfalse;
@@ -1919,6 +1995,7 @@ addrinfo_ipv6_mc_global_p(VALUE self)
 static VALUE
 addrinfo_ipv6_to_ipv4(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     struct in6_addr *addr;
     int family = ai_get_afamily(rai);
@@ -1953,6 +2030,7 @@ addrinfo_ipv6_to_ipv4(VALUE self)
 static VALUE
 addrinfo_unix_path(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int family = ai_get_afamily(rai);
     struct sockaddr_un *addr;
@@ -2012,6 +2090,7 @@ addrinfo_unix_path(VALUE self)
 static VALUE
 addrinfo_s_getaddrinfo(int argc, VALUE *argv, VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE node, service, family, socktype, protocol, flags;
 
     rb_scan_args(argc, argv, "24", &node, &service, &family, &socktype, &protocol, &flags);
@@ -2032,6 +2111,7 @@ addrinfo_s_getaddrinfo(int argc, VALUE *argv, VALUE self)
 static VALUE
 addrinfo_s_ip(VALUE self, VALUE host)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE ret;
     rb_addrinfo_t *rai;
     ret = addrinfo_firstonly_new(host, Qnil,
@@ -2053,6 +2133,7 @@ addrinfo_s_ip(VALUE self, VALUE host)
 static VALUE
 addrinfo_s_tcp(VALUE self, VALUE host, VALUE port)
 {
+UNRUBBY_SOCKET_HACK;
     return addrinfo_firstonly_new(host, port,
             INT2NUM(PF_UNSPEC), INT2NUM(SOCK_STREAM), INT2NUM(IPPROTO_TCP), INT2FIX(0));
 }
@@ -2068,6 +2149,7 @@ addrinfo_s_tcp(VALUE self, VALUE host, VALUE port)
 static VALUE
 addrinfo_s_udp(VALUE self, VALUE host, VALUE port)
 {
+UNRUBBY_SOCKET_HACK;
     return addrinfo_firstonly_new(host, port,
             INT2NUM(PF_UNSPEC), INT2NUM(SOCK_DGRAM), INT2NUM(IPPROTO_UDP), INT2FIX(0));
 }
@@ -2089,6 +2171,7 @@ addrinfo_s_udp(VALUE self, VALUE host, VALUE port)
 static VALUE
 addrinfo_s_unix(int argc, VALUE *argv, VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE path, vsocktype, addr;
     int socktype;
     rb_addrinfo_t *rai;
@@ -2112,6 +2195,7 @@ addrinfo_s_unix(int argc, VALUE *argv, VALUE self)
 VALUE
 rsock_sockaddr_string_value(volatile VALUE *v)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE val = *v;
     if (IS_ADDRINFO(val)) {
         *v = addrinfo_to_sockaddr(val);
@@ -2123,6 +2207,7 @@ rsock_sockaddr_string_value(volatile VALUE *v)
 char *
 rsock_sockaddr_string_value_ptr(volatile VALUE *v)
 {
+UNRUBBY_SOCKET_HACK;
     rsock_sockaddr_string_value(v);
     return RSTRING_PTR(*v);
 }
@@ -2130,6 +2215,7 @@ rsock_sockaddr_string_value_ptr(volatile VALUE *v)
 VALUE
 rb_check_sockaddr_string_type(VALUE val)
 {
+UNRUBBY_SOCKET_HACK;
     if (IS_ADDRINFO(val))
         return addrinfo_to_sockaddr(val);
     return rb_check_string_type(val);
@@ -2138,6 +2224,7 @@ rb_check_sockaddr_string_type(VALUE val)
 VALUE
 rsock_fd_socket_addrinfo(int fd, struct sockaddr *addr, socklen_t len)
 {
+UNRUBBY_SOCKET_HACK;
     int family;
     int socktype;
     int ret;
@@ -2157,6 +2244,7 @@ rsock_fd_socket_addrinfo(int fd, struct sockaddr *addr, socklen_t len)
 VALUE
 rsock_io_socket_addrinfo(VALUE io, struct sockaddr *addr, socklen_t len)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
 
     switch (TYPE(io)) {
@@ -2181,6 +2269,7 @@ rsock_io_socket_addrinfo(VALUE io, struct sockaddr *addr, socklen_t len)
 void
 rsock_init_addrinfo(void)
 {
+UNRUBBY_SOCKET_HACK;
     /*
      * The Addrinfo class maps <tt>struct addrinfo</tt> to ruby.  This
      * structure identifies an Internet host and a service.

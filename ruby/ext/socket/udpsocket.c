@@ -26,6 +26,7 @@
 static VALUE
 udp_init(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE arg;
     int family = AF_INET;
     int fd;
@@ -51,6 +52,7 @@ struct udp_arg
 static VALUE
 udp_connect_internal(struct udp_arg *arg)
 {
+UNRUBBY_SOCKET_HACK;
     int fd = arg->fd;
     struct addrinfo *res;
 
@@ -83,6 +85,7 @@ VALUE rsock_freeaddrinfo(struct addrinfo *addr);
 static VALUE
 udp_connect(VALUE sock, VALUE host, VALUE port)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct udp_arg arg;
     VALUE ret;
@@ -112,6 +115,7 @@ udp_connect(VALUE sock, VALUE host, VALUE port)
 static VALUE
 udp_bind(VALUE sock, VALUE host, VALUE port)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct addrinfo *res0, *res;
 
@@ -155,6 +159,7 @@ udp_bind(VALUE sock, VALUE host, VALUE port)
 static VALUE
 udp_send(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE flags, host, port;
     rb_io_t *fptr;
     int n;
@@ -243,12 +248,14 @@ udp_send(int argc, VALUE *argv, VALUE sock)
 static VALUE
 udp_recvfrom_nonblock(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_s_recvfrom_nonblock(sock, argc, argv, RECV_IP);
 }
 
 void
 rsock_init_udpsocket(void)
 {
+UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: UDPSocket < IPSocket
      *

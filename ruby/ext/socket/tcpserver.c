@@ -26,6 +26,7 @@
 static VALUE
 tcp_svr_init(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE hostname, port;
 
     rb_scan_args(argc, argv, "011", &hostname, &port);
@@ -46,6 +47,7 @@ tcp_svr_init(int argc, VALUE *argv, VALUE sock)
 static VALUE
 tcp_accept(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_storage from;
     socklen_t fromlen;
@@ -92,6 +94,7 @@ tcp_accept(VALUE sock)
 static VALUE
 tcp_accept_nonblock(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_storage from;
     socklen_t fromlen;
@@ -119,6 +122,7 @@ tcp_accept_nonblock(VALUE sock)
 static VALUE
 tcp_sysaccept(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_storage from;
     socklen_t fromlen;
@@ -131,6 +135,7 @@ tcp_sysaccept(VALUE sock)
 void
 rsock_init_tcpserver(void)
 {
+UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: TCPServer < TCPSocket
      *

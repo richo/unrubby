@@ -5,6 +5,7 @@ VALUE rb_cSockOpt;
 static VALUE
 constant_to_sym(int constant, ID (*intern_const)(int))
 {
+UNRUBBY_SOCKET_HACK;
     ID name = intern_const(constant);
     if (name) {
         return ID2SYM(name);
@@ -16,6 +17,7 @@ constant_to_sym(int constant, ID (*intern_const)(int))
 static VALUE
 optname_to_sym(int level, int optname)
 {
+UNRUBBY_SOCKET_HACK;
     switch (level) {
       case SOL_SOCKET:
         return constant_to_sym(optname, rsock_intern_so_optname);
@@ -47,6 +49,7 @@ optname_to_sym(int level, int optname)
 static VALUE
 sockopt_initialize(VALUE self, VALUE vfamily, VALUE vlevel, VALUE voptname, VALUE data)
 {
+UNRUBBY_SOCKET_HACK;
     int family = rsock_family_arg(vfamily);
     int level = rsock_level_arg(family, vlevel);
     int optname = rsock_optname_arg(family, level, voptname);
@@ -61,6 +64,7 @@ sockopt_initialize(VALUE self, VALUE vfamily, VALUE vlevel, VALUE voptname, VALU
 VALUE
 rsock_sockopt_new(int family, int level, int optname, VALUE data)
 {
+UNRUBBY_SOCKET_HACK;
     NEWOBJ(obj, struct RObject);
     OBJSETUP(obj, rb_cSockOpt, T_OBJECT);
     StringValue(data);
@@ -80,12 +84,14 @@ rsock_sockopt_new(int family, int level, int optname, VALUE data)
 static VALUE
 sockopt_family_m(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return rb_attr_get(self, rb_intern("family"));
 }
 
 static int
 sockopt_level(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return NUM2INT(rb_attr_get(self, rb_intern("level")));
 }
 
@@ -101,12 +107,14 @@ sockopt_level(VALUE self)
 static VALUE
 sockopt_level_m(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return INT2NUM(sockopt_level(self));
 }
 
 static int
 sockopt_optname(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return NUM2INT(rb_attr_get(self, rb_intern("optname")));
 }
 
@@ -122,6 +130,7 @@ sockopt_optname(VALUE self)
 static VALUE
 sockopt_optname_m(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return INT2NUM(sockopt_optname(self));
 }
 
@@ -137,6 +146,7 @@ sockopt_optname_m(VALUE self)
 static VALUE
 sockopt_data(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE v = rb_attr_get(self, rb_intern("data"));
     StringValue(v);
     return v;
@@ -156,6 +166,7 @@ sockopt_data(VALUE self)
 static VALUE
 sockopt_s_int(VALUE klass, VALUE vfamily, VALUE vlevel, VALUE voptname, VALUE vint)
 {
+UNRUBBY_SOCKET_HACK;
     int family = rsock_family_arg(vfamily);
     int level = rsock_level_arg(family, vlevel);
     int optname = rsock_optname_arg(family, level, voptname);
@@ -177,6 +188,7 @@ sockopt_s_int(VALUE klass, VALUE vfamily, VALUE vlevel, VALUE voptname, VALUE vi
 static VALUE
 sockopt_int(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     int i;
     VALUE data = sockopt_data(self);
     StringValue(data);
@@ -204,6 +216,7 @@ sockopt_int(VALUE self)
 static VALUE
 sockopt_s_bool(VALUE klass, VALUE vfamily, VALUE vlevel, VALUE voptname, VALUE vbool)
 {
+UNRUBBY_SOCKET_HACK;
     int family = rsock_family_arg(vfamily);
     int level = rsock_level_arg(family, vlevel);
     int optname = rsock_optname_arg(family, level, voptname);
@@ -223,6 +236,7 @@ sockopt_s_bool(VALUE klass, VALUE vfamily, VALUE vlevel, VALUE voptname, VALUE v
 static VALUE
 sockopt_bool(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     int i;
     VALUE data = sockopt_data(self);
     StringValue(data);
@@ -250,6 +264,7 @@ sockopt_bool(VALUE self)
 static VALUE
 sockopt_s_linger(VALUE klass, VALUE vonoff, VALUE vsecs)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE tmp;
     struct linger l;
     memset(&l, 0, sizeof(l));
@@ -273,6 +288,7 @@ sockopt_s_linger(VALUE klass, VALUE vonoff, VALUE vsecs)
 static VALUE
 sockopt_linger(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     int level = sockopt_level(self);
     int optname = sockopt_optname(self);
     VALUE data = sockopt_data(self);
@@ -297,6 +313,7 @@ sockopt_linger(VALUE self)
 static int
 inspect_int(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(int)) {
         int i;
         memcpy((char*)&i, RSTRING_PTR(data), sizeof(int));
@@ -311,6 +328,7 @@ inspect_int(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_errno(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(int)) {
         int i;
         char *err;
@@ -328,6 +346,7 @@ inspect_errno(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_uint(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(int)) {
         unsigned int i;
         memcpy((char*)&i, RSTRING_PTR(data), sizeof(unsigned int));
@@ -344,6 +363,7 @@ inspect_uint(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_linger(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct linger)) {
         struct linger s;
         memcpy((char*)&s, RSTRING_PTR(data), sizeof(s));
@@ -365,6 +385,7 @@ inspect_linger(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_socktype(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(int)) {
         int i;
         ID id;
@@ -385,6 +406,7 @@ inspect_socktype(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_timeval_as_interval(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct timeval)) {
         struct timeval s;
         memcpy((char*)&s, RSTRING_PTR(data), sizeof(s));
@@ -440,6 +462,7 @@ inspect_timeval_as_interval(int level, int optname, VALUE data, VALUE ret)
 static char *
 inet_ntop(int af, const void *addr, char *numaddr, size_t numaddr_len)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef HAVE_INET_NTOA
     struct in_addr in;
     memcpy(&in.s_addr, addr, sizeof(in.s_addr));
@@ -458,6 +481,7 @@ inet_ntop(int af, const void *addr, char *numaddr, size_t numaddr_len)
 static int
 rb_if_indextoname(const char *succ_prefix, const char *fail_prefix, unsigned int ifindex, char *buf, size_t len)
 {
+UNRUBBY_SOCKET_HACK;
 #if defined(HAVE_IF_INDEXTONAME)
     char ifbuf[IFNAMSIZ];
     if (if_indextoname(ifindex, ifbuf) == NULL)
@@ -476,6 +500,7 @@ rb_if_indextoname(const char *succ_prefix, const char *fail_prefix, unsigned int
 static int
 inspect_ipv4_mreq(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct ip_mreq)) {
         struct ip_mreq s;
         char addrbuf[INET_ADDRSTRLEN];
@@ -500,6 +525,7 @@ inspect_ipv4_mreq(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_ipv4_mreqn(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct ip_mreqn)) {
         struct ip_mreqn s;
         char addrbuf[INET_ADDRSTRLEN], ifbuf[32+IFNAMSIZ];
@@ -526,6 +552,7 @@ inspect_ipv4_mreqn(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_ipv4_add_drop_membership(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct ip_mreq))
         return inspect_ipv4_mreq(level, optname, data, ret);
 # if defined(HAVE_TYPE_STRUCT_IP_MREQN)
@@ -541,6 +568,7 @@ inspect_ipv4_add_drop_membership(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_ipv4_multicast_if(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct in_addr)) {
         struct in_addr s;
         char addrbuf[INET_ADDRSTRLEN];
@@ -564,6 +592,7 @@ inspect_ipv4_multicast_if(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_ipv6_multicast_if(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(int)) {
         char ifbuf[32+IFNAMSIZ];
         unsigned int ifindex;
@@ -582,6 +611,7 @@ inspect_ipv6_multicast_if(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_ipv6_mreq(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct ipv6_mreq)) {
         struct ipv6_mreq s;
         char addrbuf[INET6_ADDRSTRLEN], ifbuf[32+IFNAMSIZ];
@@ -609,6 +639,7 @@ inspect_ipv6_mreq(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_peercred(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(RUBY_SOCK_PEERCRED)) {
         RUBY_SOCK_PEERCRED cred;
         memcpy(&cred, RSTRING_PTR(data), sizeof(RUBY_SOCK_PEERCRED));
@@ -627,6 +658,7 @@ inspect_peercred(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_local_peercred(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct xucred)) {
         struct xucred cred;
         memcpy(&cred, RSTRING_PTR(data), sizeof(struct xucred));
@@ -665,6 +697,7 @@ inspect_local_peercred(int level, int optname, VALUE data, VALUE ret)
 static VALUE
 sockopt_inspect(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     int family = NUM2INT(sockopt_family_m(self));
     int level = NUM2INT(sockopt_level_m(self));
     int optname = NUM2INT(sockopt_optname_m(self));
@@ -885,12 +918,14 @@ sockopt_inspect(VALUE self)
 static VALUE
 sockopt_unpack(VALUE self, VALUE template)
 {
+UNRUBBY_SOCKET_HACK;
     return rb_funcall(sockopt_data(self), rb_intern("unpack"), 1, template);
 }
 
 void
 rsock_init_sockopt(void)
 {
+UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: Socket::Option
      *

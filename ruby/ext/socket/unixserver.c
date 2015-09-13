@@ -24,6 +24,7 @@
 static VALUE
 unix_svr_init(VALUE sock, VALUE path)
 {
+UNRUBBY_SOCKET_HACK;
     return rsock_init_unixsock(sock, path, 1);
 }
 
@@ -47,6 +48,7 @@ unix_svr_init(VALUE sock, VALUE path)
 static VALUE
 unix_accept(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_un from;
     socklen_t fromlen;
@@ -93,6 +95,7 @@ unix_accept(VALUE sock)
 static VALUE
 unix_accept_nonblock(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_un from;
     socklen_t fromlen;
@@ -124,6 +127,7 @@ unix_accept_nonblock(VALUE sock)
 static VALUE
 unix_sysaccept(VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     struct sockaddr_un from;
     socklen_t fromlen;
@@ -138,6 +142,7 @@ unix_sysaccept(VALUE sock)
 void
 rsock_init_unixserver(void)
 {
+UNRUBBY_SOCKET_HACK;
 #ifdef HAVE_SYS_UN_H
     /*
      * Document-class: UNIXServer < UNIXSocket

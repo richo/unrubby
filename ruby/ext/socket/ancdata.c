@@ -8,6 +8,7 @@ static VALUE rb_cAncillaryData;
 static VALUE
 constant_to_sym(int constant, ID (*intern_const)(int))
 {
+UNRUBBY_SOCKET_HACK;
     ID name = intern_const(constant);
     if (name) {
         return ID2SYM(name);
@@ -19,6 +20,7 @@ constant_to_sym(int constant, ID (*intern_const)(int))
 static VALUE
 ip_cmsg_type_to_sym(int level, int cmsg_type)
 {
+UNRUBBY_SOCKET_HACK;
     switch (level) {
       case SOL_SOCKET:
         return constant_to_sym(cmsg_type, rsock_intern_scm_optname);
@@ -72,6 +74,7 @@ ip_cmsg_type_to_sym(int level, int cmsg_type)
 static VALUE
 ancillary_initialize(VALUE self, VALUE vfamily, VALUE vlevel, VALUE vtype, VALUE data)
 {
+UNRUBBY_SOCKET_HACK;
     int family = rsock_family_arg(vfamily);
     int level = rsock_level_arg(family, vlevel);
     int type = rsock_cmsg_type_arg(family, level, vtype);
@@ -86,6 +89,7 @@ ancillary_initialize(VALUE self, VALUE vfamily, VALUE vlevel, VALUE vtype, VALUE
 static VALUE
 ancdata_new(int family, int level, int type, VALUE data)
 {
+UNRUBBY_SOCKET_HACK;
     NEWOBJ(obj, struct RObject);
     OBJSETUP(obj, rb_cAncillaryData, T_OBJECT);
     StringValue(data);
@@ -96,6 +100,7 @@ ancdata_new(int family, int level, int type, VALUE data)
 static int
 ancillary_family(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE v = rb_attr_get(self, rb_intern("family"));
     return NUM2INT(v);
 }
@@ -112,12 +117,14 @@ ancillary_family(VALUE self)
 static VALUE
 ancillary_family_m(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return INT2NUM(ancillary_family(self));
 }
 
 static int
 ancillary_level(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE v = rb_attr_get(self, rb_intern("level"));
     return NUM2INT(v);
 }
@@ -134,12 +141,14 @@ ancillary_level(VALUE self)
 static VALUE
 ancillary_level_m(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return INT2NUM(ancillary_level(self));
 }
 
 static int
 ancillary_type(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE v = rb_attr_get(self, rb_intern("type"));
     return NUM2INT(v);
 }
@@ -156,6 +165,7 @@ ancillary_type(VALUE self)
 static VALUE
 ancillary_type_m(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     return INT2NUM(ancillary_type(self));
 }
 
@@ -171,6 +181,7 @@ ancillary_type_m(VALUE self)
 static VALUE
 ancillary_data(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE v = rb_attr_get(self, rb_intern("data"));
     StringValue(v);
     return v;
@@ -189,6 +200,7 @@ ancillary_data(VALUE self)
 static VALUE
 ancillary_s_unix_rights(int argc, VALUE *argv, VALUE klass)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE result, str, ary;
     int i;
 
@@ -255,6 +267,7 @@ ancillary_s_unix_rights(int argc, VALUE *argv, VALUE klass)
 static VALUE
 ancillary_unix_rights(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     int level, type;
 
     level = ancillary_level(self);
@@ -298,6 +311,7 @@ ancillary_unix_rights(VALUE self)
 static VALUE
 ancillary_timestamp(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     int level, type;
     VALUE data;
     VALUE result = Qnil;
@@ -364,6 +378,7 @@ ancillary_timestamp(VALUE self)
 static VALUE
 ancillary_s_int(VALUE klass, VALUE vfamily, VALUE vlevel, VALUE vtype, VALUE integer)
 {
+UNRUBBY_SOCKET_HACK;
     int family = rsock_family_arg(vfamily);
     int level = rsock_level_arg(family, vlevel);
     int type = rsock_cmsg_type_arg(family, level, vtype);
@@ -385,6 +400,7 @@ ancillary_s_int(VALUE klass, VALUE vfamily, VALUE vlevel, VALUE vtype, VALUE int
 static VALUE
 ancillary_int(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE data;
     int i;
     data = ancillary_data(self);
@@ -418,6 +434,7 @@ ancillary_int(VALUE self)
 static VALUE
 ancillary_s_ip_pktinfo(int argc, VALUE *argv, VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE v_addr, v_ifindex, v_spec_dst;
     unsigned int ifindex;
     struct sockaddr_in sa;
@@ -481,6 +498,7 @@ ancillary_s_ip_pktinfo(int argc, VALUE *argv, VALUE self)
 static VALUE
 ancillary_ip_pktinfo(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     int level, type;
     VALUE data;
     struct in_pktinfo pktinfo;
@@ -531,6 +549,7 @@ ancillary_ip_pktinfo(VALUE self)
 static VALUE
 ancillary_s_ipv6_pktinfo(VALUE self, VALUE v_addr, VALUE v_ifindex)
 {
+UNRUBBY_SOCKET_HACK;
     unsigned int ifindex;
     struct sockaddr_in6 sa;
     struct in6_pktinfo pktinfo;
@@ -560,6 +579,7 @@ ancillary_s_ipv6_pktinfo(VALUE self, VALUE v_addr, VALUE v_ifindex)
 static void
 extract_ipv6_pktinfo(VALUE self, struct in6_pktinfo *pktinfo_ptr, struct sockaddr_in6 *sa_ptr)
 {
+UNRUBBY_SOCKET_HACK;
     int level, type;
     VALUE data;
 
@@ -601,6 +621,7 @@ extract_ipv6_pktinfo(VALUE self, struct in6_pktinfo *pktinfo_ptr, struct sockadd
 static VALUE
 ancillary_ipv6_pktinfo(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_pktinfo pktinfo;
     struct sockaddr_in6 sa;
     VALUE v_addr;
@@ -631,6 +652,7 @@ ancillary_ipv6_pktinfo(VALUE self)
 static VALUE
 ancillary_ipv6_pktinfo_addr(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_pktinfo pktinfo;
     struct sockaddr_in6 sa;
     extract_ipv6_pktinfo(self, &pktinfo, &sa);
@@ -658,6 +680,7 @@ ancillary_ipv6_pktinfo_addr(VALUE self)
 static VALUE
 ancillary_ipv6_pktinfo_ifindex(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     struct in6_pktinfo pktinfo;
     struct sockaddr_in6 sa;
     extract_ipv6_pktinfo(self, &pktinfo, &sa);
@@ -671,6 +694,7 @@ ancillary_ipv6_pktinfo_ifindex(VALUE self)
 static int
 anc_inspect_socket_rights(int level, int type, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (level == SOL_SOCKET && type == SCM_RIGHTS &&
         0 < RSTRING_LEN(data) && (RSTRING_LEN(data) % sizeof(int) == 0)) {
         long off;
@@ -691,6 +715,7 @@ anc_inspect_socket_rights(int level, int type, VALUE data, VALUE ret)
 static int
 anc_inspect_passcred_credentials(int level, int type, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (level == SOL_SOCKET && type == SCM_CREDENTIALS &&
         RSTRING_LEN(data) == sizeof(struct ucred)) {
         struct ucred cred;
@@ -710,6 +735,7 @@ anc_inspect_passcred_credentials(int level, int type, VALUE data, VALUE ret)
 static int
 anc_inspect_socket_creds(int level, int type, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (level != SOL_SOCKET && type != SCM_CREDS)
 	return 0;
 
@@ -776,6 +802,7 @@ anc_inspect_socket_creds(int level, int type, VALUE data, VALUE ret)
 static int
 anc_inspect_ip_recvdstaddr(int level, int type, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (level == IPPROTO_IP && type == IP_RECVDSTADDR &&
         RSTRING_LEN(data) == sizeof(struct in_addr)) {
         struct in_addr addr;
@@ -797,6 +824,7 @@ anc_inspect_ip_recvdstaddr(int level, int type, VALUE data, VALUE ret)
 static int
 anc_inspect_ip_pktinfo(int level, int type, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (level == IPPROTO_IP && type == IP_PKTINFO &&
         RSTRING_LEN(data) == sizeof(struct in_pktinfo)) {
         struct in_pktinfo pktinfo;
@@ -826,6 +854,7 @@ anc_inspect_ip_pktinfo(int level, int type, VALUE data, VALUE ret)
 static int
 anc_inspect_ipv6_pktinfo(int level, int type, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (level == IPPROTO_IPV6 && type == IPV6_PKTINFO &&
         RSTRING_LEN(data) == sizeof(struct in6_pktinfo)) {
         struct in6_pktinfo *pktinfo = (struct in6_pktinfo *)RSTRING_PTR(data);
@@ -854,6 +883,7 @@ anc_inspect_ipv6_pktinfo(int level, int type, VALUE data, VALUE ret)
 static int
 inspect_timeval_as_abstime(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct timeval)) {
         struct timeval tv;
         time_t time;
@@ -876,6 +906,7 @@ inspect_timeval_as_abstime(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_timespec_as_abstime(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct timespec)) {
         struct timespec ts;
         struct tm tm;
@@ -896,6 +927,7 @@ inspect_timespec_as_abstime(int level, int optname, VALUE data, VALUE ret)
 static int
 inspect_bintime_as_abstime(int level, int optname, VALUE data, VALUE ret)
 {
+UNRUBBY_SOCKET_HACK;
     if (RSTRING_LEN(data) == sizeof(struct bintime)) {
         struct bintime bt;
         struct tm tm;
@@ -952,6 +984,7 @@ inspect_bintime_as_abstime(int level, int optname, VALUE data, VALUE ret)
 static VALUE
 ancillary_inspect(VALUE self)
 {
+UNRUBBY_SOCKET_HACK;
     VALUE ret;
     int family, level, type;
     VALUE data;
@@ -1090,6 +1123,7 @@ ancillary_inspect(VALUE self)
 static VALUE
 ancillary_cmsg_is_p(VALUE self, VALUE vlevel, VALUE vtype)
 {
+UNRUBBY_SOCKET_HACK;
     int family = ancillary_family(self);
     int level = rsock_level_arg(family, vlevel);
     int type = rsock_cmsg_type_arg(family, level, vtype);
@@ -1113,6 +1147,7 @@ struct sendmsg_args_struct {
 static VALUE
 nogvl_sendmsg_func(void *ptr)
 {
+UNRUBBY_SOCKET_HACK;
     struct sendmsg_args_struct *args = ptr;
     return sendmsg(args->fd, args->msg, args->flags);
 }
@@ -1120,6 +1155,7 @@ nogvl_sendmsg_func(void *ptr)
 static ssize_t
 rb_sendmsg(int fd, const struct msghdr *msg, int flags)
 {
+UNRUBBY_SOCKET_HACK;
     struct sendmsg_args_struct args;
     args.fd = fd;
     args.msg = msg;
@@ -1130,6 +1166,7 @@ rb_sendmsg(int fd, const struct msghdr *msg, int flags)
 static VALUE
 bsock_sendmsg_internal(int argc, VALUE *argv, VALUE sock, int nonblock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     VALUE data, vflags, dest_sockaddr;
     VALUE *controls_ptr;
@@ -1327,6 +1364,7 @@ bsock_sendmsg_internal(int argc, VALUE *argv, VALUE sock, int nonblock)
 VALUE
 rsock_bsock_sendmsg(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return bsock_sendmsg_internal(argc, argv, sock, 0);
 }
 #endif
@@ -1346,6 +1384,7 @@ rsock_bsock_sendmsg(int argc, VALUE *argv, VALUE sock)
 VALUE
 rsock_bsock_sendmsg_nonblock(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return bsock_sendmsg_internal(argc, argv, sock, 1);
 }
 #endif
@@ -1360,6 +1399,7 @@ struct recvmsg_args_struct {
 static VALUE
 nogvl_recvmsg_func(void *ptr)
 {
+UNRUBBY_SOCKET_HACK;
     struct recvmsg_args_struct *args = ptr;
     return recvmsg(args->fd, args->msg, args->flags);
 }
@@ -1367,6 +1407,7 @@ nogvl_recvmsg_func(void *ptr)
 static ssize_t
 rb_recvmsg(int fd, struct msghdr *msg, int flags)
 {
+UNRUBBY_SOCKET_HACK;
     struct recvmsg_args_struct args;
     args.fd = fd;
     args.msg = msg;
@@ -1378,6 +1419,7 @@ rb_recvmsg(int fd, struct msghdr *msg, int flags)
 static void
 discard_cmsg(struct cmsghdr *cmh, char *msg_end, int msg_peek_p)
 {
+UNRUBBY_SOCKET_HACK;
 # if !defined(FD_PASSING_WORK_WITH_RECVMSG_MSG_PEEK)
     /*
      * FreeBSD 8.2.0, NetBSD 5 and MacOS X Snow Leopard doesn't
@@ -1406,6 +1448,7 @@ discard_cmsg(struct cmsghdr *cmh, char *msg_end, int msg_peek_p)
 void
 rsock_discard_cmsg_resource(struct msghdr *mh, int msg_peek_p)
 {
+UNRUBBY_SOCKET_HACK;
 #if defined(HAVE_ST_MSG_CONTROL)
     struct cmsghdr *cmh;
     char *msg_end;
@@ -1425,6 +1468,7 @@ rsock_discard_cmsg_resource(struct msghdr *mh, int msg_peek_p)
 static void
 make_io_for_unix_rights(VALUE ctl, struct cmsghdr *cmh, char *msg_end)
 {
+UNRUBBY_SOCKET_HACK;
     if (cmh->cmsg_level == SOL_SOCKET && cmh->cmsg_type == SCM_RIGHTS) {
         int *fdp, *end;
 	VALUE ary = rb_ary_new();
@@ -1455,6 +1499,7 @@ make_io_for_unix_rights(VALUE ctl, struct cmsghdr *cmh, char *msg_end)
 static VALUE
 bsock_recvmsg_internal(int argc, VALUE *argv, VALUE sock, int nonblock)
 {
+UNRUBBY_SOCKET_HACK;
     rb_io_t *fptr;
     VALUE vmaxdatlen, vmaxctllen, vflags, vopts;
     int grow_buffer;
@@ -1749,6 +1794,7 @@ bsock_recvmsg_internal(int argc, VALUE *argv, VALUE sock, int nonblock)
 VALUE
 rsock_bsock_recvmsg(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return bsock_recvmsg_internal(argc, argv, sock, 0);
 }
 #endif
@@ -1768,6 +1814,7 @@ rsock_bsock_recvmsg(int argc, VALUE *argv, VALUE sock)
 VALUE
 rsock_bsock_recvmsg_nonblock(int argc, VALUE *argv, VALUE sock)
 {
+UNRUBBY_SOCKET_HACK;
     return bsock_recvmsg_internal(argc, argv, sock, 1);
 }
 #endif
@@ -1775,6 +1822,7 @@ rsock_bsock_recvmsg_nonblock(int argc, VALUE *argv, VALUE sock)
 void
 rsock_init_ancdata(void)
 {
+UNRUBBY_SOCKET_HACK;
 #if defined(HAVE_ST_MSG_CONTROL)
     /*
      * Document-class: Socket::AncillaryData

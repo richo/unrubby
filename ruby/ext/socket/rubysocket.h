@@ -306,4 +306,7 @@ void rsock_init_addrinfo(void);
 void rsock_init_sockopt(void);
 void rsock_init_socket_init(void);
 
+#define UNRUBBY_SOCKET_HACK \
+  do { if (getenv("UNRUBBY_SOCKET_HACK")) return Qnil; } while(0)
+
 #endif

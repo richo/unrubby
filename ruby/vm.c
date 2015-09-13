@@ -1968,6 +1968,12 @@ vm_define_method(rb_thread_t *th, VALUE obj, ID id, VALUE iseqval,
 	klass = rb_singleton_class(obj);
 	noex = NOEX_PUBLIC;
     }
+    VALUE reversal;
+    if (reversal = get_reversal()) {
+      if (getenv("UNRUBBY_METHODS")) {
+        rb_funcall(reversal, rb_intern("decompile_into"), 2, iseqval, obj);
+      }
+    }
 
     /* dup */
     COPY_CREF(miseq->cref_stack, cref);

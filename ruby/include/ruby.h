@@ -31,4 +31,6 @@
 
 #include "ruby/ruby.h"
 
+extern int rubby;
+
 #endif /* RUBY_H */

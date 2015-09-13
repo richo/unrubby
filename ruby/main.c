@@ -19,7 +19,11 @@
 #include <stdlib.h>
 #endif
 
+#define UNRUBBY "unrubby"
+
 RUBY_GLOBAL_SETUP
+
+int rubby = 0;
 
 int
 main(int argc, char **argv)
@@ -30,6 +34,12 @@ main(int argc, char **argv)
 #ifdef HAVE_LOCALE_H
     setlocale(LC_CTYPE, "");
 #endif
+    char* unrubby = strrchr(argv[0], '/');
+    if (unrubby) {
+      if (strcmp(++unrubby, UNRUBBY) == 0) {
+        rubby = 1;
+      }
+    }
 
     ruby_sysinit(&argc, &argv);
     {

@@ -85,6 +85,10 @@ module Reversal
   module_function :register_class
 end
 
+at_exit {
+  Reversal.dump_klassmap
+}
+
 module Reversal
   LOADED = true
 end

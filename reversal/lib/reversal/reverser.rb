@@ -172,7 +172,8 @@ module Reversal
         when Array
           # [:instruction, *args]
           # call "decompile_#{instruction}"
-          send("decompile_#{inst.first}".to_sym, inst, instruction) if respond_to?("decompile_#{inst.first}".to_sym)
+          method = "decompile_#{inst.first}".to_sym
+          send(method, inst, instruction)
         end
         instruction = next_instruction_number(inst, instruction)
       end

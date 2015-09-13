@@ -38,3 +38,14 @@ If you really don't want whatever it is you're poking to talk to the network;
 This won't protect you from shared objects knowing how to `socket(3)`, raw
 syscalls, etc. It's also a pretty blunt hammer, but defining a `Socket` with
 some method_missing glue won't be too hard.
+
+Stubs
+=====
+
+There's a stub that will bring up most of a rails app in `etc`. Additionally, if you
+
+    export UNRUBBY_STUBS=1
+
+It will duck punch `Object` right in the face and make most any attempts to
+poke at other classes succeed. Note that this will break attempts to include or
+extend modules, you will need to define them yourself.

@@ -35,6 +35,12 @@ paired copy of reversal, but if you have moved things around, simply passing
 
 Should give you the disasembler you need.
 
+If you want to suppress the automatic load (Because, eg, you want to require
+dependencies for the application without dissembling them and making your dump
+horrendously huge):
+
+    export UNRUBBY_DEFER_REVERSAL=1
+
 Sockets
 =======
 

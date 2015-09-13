@@ -78,7 +78,9 @@ main(int argc, char **argv)
 	RUBY_INIT_STACK;
 	ruby_init();
     if (rubby) {
-      require_reversal(argv[0]);
+      if(!getenv("UNRUBBY_DEFER_REVERSAL")) {
+        require_reversal(argv[0]);
+      }
     }
 	return ruby_run_node(ruby_options(argc, argv));
     }

@@ -19,10 +19,26 @@ require 'reversal/reverser'
 module Reversal
   VERSION = "0.9.0"
 
+  @@klassmap = Hash.new do |h, k|
+    h[k] = {
+      :methods => [],
+      :includes => [],
+      :extends => [],
+      :super => nil,
+    }
+  end
+
   def decompile(iseq)
     Reverser.new(iseq).to_ir.to_s
   end
   module_function :decompile
+
+  def decompile_into(iseq, klass)
+    decompiled = self.decompile(iseq)
+    @@klassmap[klass][:methods] << decompiled
+    maybe_dump_iseq(iseq)
+  end
+  module_function :decompile_into
 end
 
 module Reversal

@@ -43,7 +43,7 @@ module Reversal
         do_simple_send(receiver, meth, args, blockiseq)
       end
     end
-    
+
     def do_super(argc, blockiseq, op_flag)
       args = popn(argc)
       explicit_check = pop
@@ -51,14 +51,14 @@ module Reversal
       args_to_pass = explicit_args ? args : []
       do_simple_send(:implicit, :super, args_to_pass, blockiseq)
     end
-    
+
     #############################
     ###### Variable Lookup ######
     #############################
     def decompile_getlocal(inst, line_no)
       push r(:getvar, get_local(inst[1]))
     end
-    
+
     def decompile_getinstancevariable(inst, line_no)
       push r(:getvar, inst[1])
     end
@@ -70,11 +70,11 @@ module Reversal
       base_str = (base.nil?) ? "" : "#{base}::"
       push r(:getvar, "#{base_str}#{inst[1]}")
     end
-    
+
     def decompile_getdynamic(inst, line_no)
       push r(:getvar, get_dynamic(inst[1], inst[2]))
     end
-    
+
     def decompile_getspecial(inst, line_no)
       key, type = inst[1..2]
       if type == 0
@@ -85,7 +85,7 @@ module Reversal
         push r(:getvar, "$#{(type >> 1)}")
       end
     end
-    
+
     #############################
     ##### Variable Assignment ###
     #############################
@@ -97,7 +97,7 @@ module Reversal
       remove_useless_dup unless @iseq.type == :top
       push r(:setvar, locals[inst[1] - 1], value)
     end
-      
+
     def decompile_setinstancevariable(inst, line_no)
       # [:setinstancevariable, :ivar_name_as_symbol]
       # [:setglobal, :global_name_as_symbol]
@@ -122,38 +122,38 @@ module Reversal
       end
       push r(:setvar, name, value)
     end
-    
-    
+
+
     ###################
     ##### Strings #####
     ###################
     def decompile_putstring(inst, line_no)
       push r(:lit, inst[1])
     end
-    
+
     def decompile_tostring(inst, line_no)
       do_simple_send(pop, :to_s)
     end
-    
+
     def decompile_concatstrings(inst, line_no)
       amt = inst[1]
       push r(:infix, :+, pop(amt))
     end
-    
+
     ##################
     ### Arrays #######
     ##################
-    
+
     def decompile_duparray(inst, line_no)
       push r(:lit, inst[1])
     end
-    
+
     def decompile_newarray(inst, line_no)
       # [:newarray, num_to_pop]
       arr = popn(inst[1])
       push r(:array, arr)
     end
-    
+
     def decompile_splatarray(inst, line_no)
       # [:splatarray]
       push r(:splat, pop)
@@ -166,7 +166,7 @@ module Reversal
       end
       push r(:infix, :+, [receiver, arg])
     end
-      
+
     ###################
     ### Ranges ########
     ###################
@@ -177,7 +177,7 @@ module Reversal
       push r(:range, first, last, inclusive)
 
     end
-      
+
     ##############
     ## Hashes ####
     ##############
@@ -189,7 +189,7 @@ module Reversal
       end
       push r(:hash, list)
     end
-    
+
     #######################
     #### Weird Stuff ######
     #######################
@@ -198,11 +198,11 @@ module Reversal
       # later
       push r(:lit, inst[1])
     end
-      
+
     def decompile_putiseq(inst, line_no)
       push inst[1]
     end
-      
+
     ############################
     ##### Stack Manipulation ###
     ############################
@@ -213,7 +213,7 @@ module Reversal
       @stack[-amt] = val
       push val
     end
-    
+
     def decompile_dup(inst, line_no)
       # [:dup]
       val = pop
@@ -265,7 +265,7 @@ module Reversal
       pop # there's a var used for lookups... not necessary for stringification
       do_simple_send(:implicit, :defined?, [inst[2]])
     end
-      
+
     ##############################
     ##### Method Dispatch ########
     ##############################
@@ -279,7 +279,7 @@ module Reversal
       # [:send, meth, argc, blockiseq, op_flag, inline_cache]
       do_send *inst[1..-1]
     end
-    
+
     #######################
     ##### Control Flow ####
     #######################
@@ -320,7 +320,7 @@ module Reversal
         end
       end
     end
-    
+
     def decompile_branchif(inst, line_no)
       decompile_branchunless(inst, line_no, true)
     end
@@ -339,7 +339,7 @@ module Reversal
       start = target
       stop  = stop_for_while_loop(target, line_no)
       return if stop.nil?
-      
+
       reverser = Reverser.new(@iseq, @parent)
       block = reverser.decompile_body(start, stop)
       if block.last == r(:nil)
@@ -376,7 +376,7 @@ module Reversal
         do_simple_send :implicit, :redo
       end
     end
-    
+
     #############################
     ###### Classes/Modules ######
     #############################
@@ -397,7 +397,7 @@ module Reversal
         push r(:general_module, :module, name, ir, [base_as_str])
       end
     end
-    
+
     ###############################
     ### Inline Cache Simulation ###
     ###############################
@@ -405,7 +405,7 @@ module Reversal
       push r(:nil)
     end
     alias_method :decompile_onceinlinecache, :decompile_getinlinecache
-    
+
     def decompile_operator(inst, line_no)
       arg, receiver = pop, pop
       push r(:infix, Reverser::OPERATOR_LOOKUP[inst.first], [receiver, arg])

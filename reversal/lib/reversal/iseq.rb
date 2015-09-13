@@ -8,7 +8,7 @@
 module Reversal
   class InvalidInstructionSequenceError < StandardError; end
   class UnknownInstructionSequenceError < StandardError; end
-  
+
   class ISeq
     class << self
       def new(*args)
@@ -32,7 +32,7 @@ module Reversal
       end
     end
   end
-  
+
   class SubclassableIseq < Struct.new(:magic, :major_version, :minor_version, :patch_version, :stats,
                                       :name, :filename, :line, :type, :locals, :args, :catch_tables, :body)
 
@@ -42,7 +42,7 @@ module Reversal
         raise InvalidInstructionSequenceError.new("Invalid YARV instruction sequence in array format: #{self.to_a}")
       end
     end
-    
+
     def version
       "#{major_version}.#{minor_version}.#{patch_version}"
     end
@@ -104,7 +104,7 @@ module Reversal
       return args_to_use.map {|x| x.to_s}.join(", ")
     end
   end
-  
+
   class VersionOneIseq < SubclassableIseq
     def initialize(*args)
       self.magic = args[0]
@@ -120,10 +120,35 @@ module Reversal
       self.args = args[10]
       self.catch_tables = args[11]
       self.body = args[12]
-      
+
       @labels = nil
     end
-    
+
+    def num_args
+      self.stats[:arg_size]
+    end
+  end
+
+  class VersionTwoISeq < SubclassableIseq
+    def initialize(*args)
+      self.magic = args[0]
+      self.major_version = args[1]
+      self.minor_version = args[2]
+      self.patch_version = args[3]
+      self.stats = args[4]
+      self.name  = args[5]
+      self.filename = args[6]
+      self.line = args[7]
+      # TODO(richo) args[8]
+      self.type = args[9] # must skip line, not in this version
+      self.locals = args[10]
+      self.args = args[11]
+      self.catch_tables = args[12]
+      self.body = args[13]
+
+      @labels = nil
+    end
+
     def num_args
       self.stats[:arg_size]
     end

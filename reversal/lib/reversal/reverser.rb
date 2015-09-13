@@ -1,6 +1,6 @@
 ##
 # reversal.rb: Reverser dispatcher for different types of decompilable code.
-# 
+#
 #
 # Copyright 2010 Michael J. Edgar, michael.j.edgar@dartmouth.edu
 #
@@ -12,23 +12,23 @@ module Reversal
                        :opt_mod => "%", :opt_eq => "==", :opt_neq => "!=", :opt_lt => "<",
                        :opt_le => "<=", :opt_gt => ">", :opt_ge => ">=", :opt_ltlt => "<<",
                        :opt_regexpmatch2 => "=~"}
-                       
+
     # Instructions module depends on OPERATOR_LOOKUP
     include Instructions
-    
-    TAB_SIZE = 2          
+
+    TAB_SIZE = 2
     ALL_INFIX = OPERATOR_LOOKUP.values + ["<=>"]
     attr_accessor :locals, :parent, :indent
-    
+
     def initialize(iseq, parent=nil)
       @iseq = ISeq.new(iseq)
       @iseq.validate!
-      
+
       @parent = parent
       @locals = [:self] + @iseq.locals.reverse
       reset!
     end
-    
+
     def reset!
       @stack = []
       @else_stack = []
@@ -71,7 +71,7 @@ module Reversal
     def get_local(idx)
       get_dynamic(idx, 0)
     end
-    
+
     ##
     # Gets a dynamic variable, based on the bytecode-style index and
     # the depth
@@ -83,14 +83,14 @@ module Reversal
       else
         raise "Invalid dynamic variable requested: #{idx} #{depth} from #{self.iseq}"
       end
-    end 
-    
+    end
+
     ##
     # Pushes a node onto the stack, as a decompiled string
     def push(str)
       @stack.push str
     end
-    
+
     ##
     # Pops a node from the stack, as a decompiled string
     def pop(n = 1)
@@ -102,22 +102,22 @@ module Reversal
         popn(n)
       end
     end
-    
+
     def popn(n = 1)
       (1..n).to_a.map {pop}.reverse
     end
-    
+
     def remove_useless_dup
       pop unless @stack.empty?
     end
-    
+
     TRACE_NEWLINE = 1
     TRACE_EXIT = 16
-    
+
     def forward_jump?(current, label)
       @iseq.labels[label] && @iseq.labels[label] > current
     end
-    
+
     def backward_jump?(current, label)
       !forward_jump?(current, label)
     end
@@ -178,6 +178,6 @@ module Reversal
       end
       r(:list, *@stack)
     end
-    
+
   end
 end

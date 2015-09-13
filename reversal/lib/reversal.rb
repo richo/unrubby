@@ -39,6 +39,35 @@ module Reversal
     maybe_dump_iseq(iseq)
   end
   module_function :decompile_into
+
+  def dump_klassmap
+    @@klassmap.each do |klass, attrs|
+      if klass.is_a? Class
+        sooper = attrs[:super]
+        puts "class #{klass.inspect}#{" < #{sooper}" if sooper}\n"
+      elsif klass.is_a? Module
+        puts "module #{klass.inspect}\n"
+      else
+        raise "No idea how to repr #{klass.inspect}"
+      end
+
+      attrs[:includes].each do |i|
+        puts "  include " + i.inspect
+      end
+
+      attrs[:extends].each do |i|
+        puts "  extend " + i.inspect
+      end
+
+      attrs[:methods].each do |m|
+        m.lines.each do |line|
+          puts "  " + line
+        end
+      end
+      puts "end"
+    end
+  end
+  module_function :dump_klassmap
 end
 
 module Reversal

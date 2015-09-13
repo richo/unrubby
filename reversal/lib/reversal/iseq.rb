@@ -24,11 +24,14 @@ module Reversal
           array = args
         end
         # dispatch
-        if array[1] == 1
+        case [array[1], array[2]]
+        when [1, 0]
           return VersionOneIseq.new(*array)
+        when [1, 2]
+          return VersionTwoISeq.new(*array)
+        else
+          raise UnknownInstructionSequenceError.new("Unknown YARV instruction sequence format: #{array[1]}.#{array[2]}.#{array[3]}")
         end
-        # did not successfully dispatch
-        raise UnknownInstructionSequenceError.new("Unknown YARV instruction sequence format: #{array[1]}.#{array[2]}.#{array[3]}")
       end
     end
   end

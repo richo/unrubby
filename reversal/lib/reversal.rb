@@ -25,3 +25,7 @@ module Reversal
     end
   end
 end
+
+module Reversal
+  LOADED = true
+end

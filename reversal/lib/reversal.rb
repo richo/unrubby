@@ -67,7 +67,22 @@ module Reversal
       puts "end"
     end
   end
+
   module_function :dump_klassmap
+  def mark_included(obj, mod)
+    @@klassmap[mod][:includes] << obj
+  end
+  module_function :mark_included
+
+  def mark_extended(obj, mod)
+    @@klassmap[mod][:extends] << obj
+  end
+  module_function :mark_extended
+
+  def register_class(klass, sooper)
+    @@klassmap[klass][:super] = sooper
+  end
+  module_function :register_class
 end
 
 module Reversal

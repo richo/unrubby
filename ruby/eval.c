@@ -11,6 +11,7 @@
 
 **********************************************************************/
 
+#include <ruby.h>
 #include "eval_intern.h"
 #include "iseq.h"
 #include "gc.h"
@@ -22,6 +23,8 @@
 #define numberof(array) (int)(sizeof(array) / sizeof((array)[0]))
 
 NORETURN(void rb_raise_jump(VALUE));
+
+static void reversal_handle_hook(const char* hook, VALUE obj, VALUE mod);
 
 VALUE rb_eLocalJumpError;
 VALUE rb_eSysStackError;
@@ -871,6 +874,7 @@ rb_mod_include(int argc, VALUE *argv, VALUE module)
     for (i = 0; i < argc; i++)
 	Check_Type(argv[i], T_MODULE);
     while (argc--) {
+    reversal_handle_hook("mark_included", argv[argc], module);
 	rb_funcall(argv[argc], rb_intern("append_features"), 1, module);
 	rb_funcall(argv[argc], rb_intern("included"), 1, module);
     }
@@ -960,10 +964,19 @@ rb_obj_extend(int argc, VALUE *argv, VALUE obj)
     for (i = 0; i < argc; i++)
 	Check_Type(argv[i], T_MODULE);
     while (argc--) {
+    reversal_handle_hook("mark_extended", argv[argc], obj);
 	rb_funcall(argv[argc], rb_intern("extend_object"), 1, obj);
 	rb_funcall(argv[argc], rb_intern("extended"), 1, obj);
     }
     return obj;
+}
+
+static void
+reversal_handle_hook(const char* hook, VALUE obj, VALUE mod) {
+  VALUE reversal;
+  if (reversal = get_reversal()) {
+    rb_funcall(reversal, rb_intern(hook), 2, obj, mod);
+  }
 }
 
 /*

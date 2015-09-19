@@ -33,7 +33,6 @@ int rsock_do_not_reverse_lookup = 1;
 void
 rsock_raise_socket_error(const char *reason, int error)
 {
-UNRUBBY_SOCKET_HACK;
 #ifdef EAI_SYSTEM
     if (error == EAI_SYSTEM) rb_sys_fail(reason);
 #endif
@@ -445,7 +444,6 @@ UNRUBBY_SOCKET_HACK;
 static void
 make_fd_nonblock(int fd)
 {
-UNRUBBY_SOCKET_HACK;
     int flags;
 #ifdef F_GETFL
     flags = fcntl(fd, F_GETFL);
@@ -562,7 +560,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_socket_init()
 {
-UNRUBBY_SOCKET_HACK;
     /*
      * SocketError is the error class for socket.
      */

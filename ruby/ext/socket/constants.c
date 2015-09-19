@@ -147,7 +147,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_socket_constants(void)
 {
-UNRUBBY_SOCKET_HACK;
     /* constants */
     init_constants();
 }

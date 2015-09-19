@@ -761,7 +761,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_basicsocket(void)
 {
-UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: BasicSocket < IO
      *

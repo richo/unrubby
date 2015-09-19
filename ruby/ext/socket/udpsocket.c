@@ -255,7 +255,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_udpsocket(void)
 {
-UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: UDPSocket < IPSocket
      *

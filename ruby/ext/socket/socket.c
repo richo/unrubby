@@ -13,7 +13,6 @@
 static void
 setup_domain_and_type(VALUE domain, int *dv, VALUE type, int *tv)
 {
-UNRUBBY_SOCKET_HACK;
     *dv = rsock_family_arg(domain);
     *tv = rsock_socktype_arg(type);
 }
@@ -1817,7 +1816,6 @@ UNRUBBY_SOCKET_HACK;
 void
 Init_socket()
 {
-UNRUBBY_SOCKET_HACK;
     rsock_init_basicsocket();
 
     /*

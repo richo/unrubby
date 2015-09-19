@@ -247,7 +247,6 @@ UNRUBBY_SOCKET_HACK;
 static void
 make_ipaddr0(struct sockaddr *addr, char *buf, size_t len)
 {
-UNRUBBY_SOCKET_HACK;
     int error;
 
     error = rb_getnameinfo(addr, SA_LEN(addr), buf, len, NULL, 0, NI_NUMERICHOST);
@@ -269,7 +268,6 @@ UNRUBBY_SOCKET_HACK;
 static void
 make_inetaddr(unsigned int host, char *buf, size_t len)
 {
-UNRUBBY_SOCKET_HACK;
     struct sockaddr_in sin;
 
     MEMZERO(&sin, struct sockaddr_in, 1);
@@ -298,7 +296,6 @@ UNRUBBY_SOCKET_HACK;
 static char*
 host_str(VALUE host, char *hbuf, size_t len, int *flags_ptr)
 {
-UNRUBBY_SOCKET_HACK;
     if (NIL_P(host)) {
         return NULL;
     }
@@ -336,7 +333,6 @@ UNRUBBY_SOCKET_HACK;
 static char*
 port_str(VALUE port, char *pbuf, size_t len, int *flags_ptr)
 {
-UNRUBBY_SOCKET_HACK;
     if (NIL_P(port)) {
         return 0;
     }
@@ -364,7 +360,6 @@ UNRUBBY_SOCKET_HACK;
 struct addrinfo*
 rsock_getaddrinfo(VALUE host, VALUE port, struct addrinfo *hints, int socktype_hack)
 {
-UNRUBBY_SOCKET_HACK;
     struct addrinfo* res = NULL;
     char *hostp, *portp;
     int error;
@@ -393,7 +388,6 @@ UNRUBBY_SOCKET_HACK;
 struct addrinfo*
 rsock_addrinfo(VALUE host, VALUE port, int socktype, int flags)
 {
-UNRUBBY_SOCKET_HACK;
     struct addrinfo hints;
 
     MEMZERO(&hints, struct addrinfo, 1);
@@ -576,7 +570,6 @@ typedef struct {
 static void
 addrinfo_mark(void *ptr)
 {
-UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = ptr;
     if (rai) {
         rb_gc_mark(rai->inspectname);
@@ -609,14 +602,12 @@ UNRUBBY_SOCKET_HACK;
 static inline rb_addrinfo_t *
 check_addrinfo(VALUE self)
 {
-UNRUBBY_SOCKET_HACK;
     return rb_check_typeddata(self, &addrinfo_type);
 }
 
 static rb_addrinfo_t *
 get_addrinfo(VALUE self)
 {
-UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = check_addrinfo(self);
 
     if (!rai) {
@@ -629,7 +620,6 @@ UNRUBBY_SOCKET_HACK;
 static rb_addrinfo_t *
 alloc_addrinfo()
 {
-UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = ALLOC(rb_addrinfo_t);
     memset(rai, 0, sizeof(rb_addrinfo_t));
     rai->inspectname = Qnil;
@@ -642,7 +632,6 @@ init_addrinfo(rb_addrinfo_t *rai, struct sockaddr *sa, socklen_t len,
               int pfamily, int socktype, int protocol,
               VALUE canonname, VALUE inspectname)
 {
-UNRUBBY_SOCKET_HACK;
     if ((socklen_t)sizeof(rai->addr) < len)
         rb_raise(rb_eArgError, "sockaddr string too big");
     memcpy((void *)&rai->addr, (void *)sa, len);
@@ -675,7 +664,6 @@ call_getaddrinfo(VALUE node, VALUE service,
                  VALUE family, VALUE socktype, VALUE protocol, VALUE flags,
                  int socktype_hack)
 {
-UNRUBBY_SOCKET_HACK;
     struct addrinfo hints, *res;
 
     MEMZERO(&hints, struct addrinfo, 1);
@@ -704,7 +692,6 @@ init_addrinfo_getaddrinfo(rb_addrinfo_t *rai, VALUE node, VALUE service,
                           VALUE family, VALUE socktype, VALUE protocol, VALUE flags,
                           VALUE inspectnode, VALUE inspectservice)
 {
-UNRUBBY_SOCKET_HACK;
     struct addrinfo *res = call_getaddrinfo(node, service, family, socktype, protocol, flags, 1);
     VALUE canonname;
     VALUE inspectname = rb_str_equal(node, inspectnode) ? Qnil : make_inspectname(inspectnode, inspectservice, res);
@@ -832,7 +819,6 @@ UNRUBBY_SOCKET_HACK;
 static void
 init_unix_addrinfo(rb_addrinfo_t *rai, VALUE path, int socktype)
 {
-UNRUBBY_SOCKET_HACK;
     struct sockaddr_un un;
     socklen_t len;
 
@@ -1819,7 +1805,6 @@ UNRUBBY_SOCKET_HACK;
 static struct in6_addr *
 extract_in6_addr(VALUE self)
 {
-UNRUBBY_SOCKET_HACK;
     rb_addrinfo_t *rai = get_addrinfo(self);
     int family = ai_get_afamily(rai);
     if (family != AF_INET6) return NULL;
@@ -2207,7 +2192,6 @@ UNRUBBY_SOCKET_HACK;
 char *
 rsock_sockaddr_string_value_ptr(volatile VALUE *v)
 {
-UNRUBBY_SOCKET_HACK;
     rsock_sockaddr_string_value(v);
     return RSTRING_PTR(*v);
 }
@@ -2269,7 +2253,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_addrinfo(void)
 {
-UNRUBBY_SOCKET_HACK;
     /*
      * The Addrinfo class maps <tt>struct addrinfo</tt> to ruby.  This
      * structure identifies an Internet host and a service.

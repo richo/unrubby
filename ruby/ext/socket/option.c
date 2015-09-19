@@ -925,7 +925,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_sockopt(void)
 {
-UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: Socket::Option
      *

@@ -135,7 +135,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_tcpserver(void)
 {
-UNRUBBY_SOCKET_HACK;
     /*
      * Document-class: TCPServer < TCPSocket
      *

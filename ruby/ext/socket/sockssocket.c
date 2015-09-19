@@ -56,7 +56,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_sockssocket(void)
 {
-UNRUBBY_SOCKET_HACK;
 #ifdef SOCKS
     /*
      * Document-class: SOCKSSocket < TCPSocket

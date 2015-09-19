@@ -579,7 +579,6 @@ UNRUBBY_SOCKET_HACK;
 static void
 extract_ipv6_pktinfo(VALUE self, struct in6_pktinfo *pktinfo_ptr, struct sockaddr_in6 *sa_ptr)
 {
-UNRUBBY_SOCKET_HACK;
     int level, type;
     VALUE data;
 
@@ -1419,7 +1418,6 @@ UNRUBBY_SOCKET_HACK;
 static void
 discard_cmsg(struct cmsghdr *cmh, char *msg_end, int msg_peek_p)
 {
-UNRUBBY_SOCKET_HACK;
 # if !defined(FD_PASSING_WORK_WITH_RECVMSG_MSG_PEEK)
     /*
      * FreeBSD 8.2.0, NetBSD 5 and MacOS X Snow Leopard doesn't
@@ -1448,7 +1446,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_discard_cmsg_resource(struct msghdr *mh, int msg_peek_p)
 {
-UNRUBBY_SOCKET_HACK;
 #if defined(HAVE_ST_MSG_CONTROL)
     struct cmsghdr *cmh;
     char *msg_end;
@@ -1468,7 +1465,6 @@ UNRUBBY_SOCKET_HACK;
 static void
 make_io_for_unix_rights(VALUE ctl, struct cmsghdr *cmh, char *msg_end)
 {
-UNRUBBY_SOCKET_HACK;
     if (cmh->cmsg_level == SOL_SOCKET && cmh->cmsg_type == SCM_RIGHTS) {
         int *fdp, *end;
 	VALUE ary = rb_ary_new();
@@ -1822,7 +1818,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_ancdata(void)
 {
-UNRUBBY_SOCKET_HACK;
 #if defined(HAVE_ST_MSG_CONTROL)
     /*
      * Document-class: Socket::AncillaryData

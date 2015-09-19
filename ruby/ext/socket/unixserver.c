@@ -142,7 +142,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_unixserver(void)
 {
-UNRUBBY_SOCKET_HACK;
 #ifdef HAVE_SYS_UN_H
     /*
      * Document-class: UNIXServer < UNIXSocket

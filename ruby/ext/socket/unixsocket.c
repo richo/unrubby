@@ -515,7 +515,6 @@ UNRUBBY_SOCKET_HACK;
 void
 rsock_init_unixsocket(void)
 {
-UNRUBBY_SOCKET_HACK;
 #ifdef HAVE_SYS_UN_H
     /*
      * Document-class: UNIXSocket < BasicSocket

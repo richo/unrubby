@@ -329,8 +329,8 @@ module Reversal
       break_table = @iseq.catch_tables.select {|arr| arr.first == :break}
       return nil if break_table.empty?
       break_table = break_table.select {|arr| arr[2] == target}
-      raise "Unexpected jump instruction #{target} #{@iseq.body.inspect}" if break_table.empty?
-      raise "Unexpected backwards jump #{target} #{@iseq.body.inspect}" unless forward_jump?(line_no, target)
+      raise InternalDecompilerError.new("Unexpected jump instruction #{target} #{@iseq.body.inspect}") if break_table.empty?
+      raise InternalDecompilerError.new("Unexpected backwards jump #{target} #{@iseq.body.inspect}") unless forward_jump?(line_no, target)
       return break_table.first[3]
     end
 

@@ -91,7 +91,7 @@ module Reversal
       elsif @parent
         @parent.get_dynamic(idx, depth - 1)
       else
-        raise "Invalid dynamic variable requested: #{idx} #{depth} from #{self.iseq}"
+        raise InternalDecompilerError.new("Invalid dynamic variable requested: #{idx} #{depth} from #{self.iseq}")
       end
     end
 
@@ -106,7 +106,7 @@ module Reversal
     def pop(n = 1)
       debug "pop from stack: #{@stack.inspect}"
       if @stack.empty?
-        raise "Popped an empty stack"
+        raise InternalDecompilerError.new("Popped an empty stack")
       elsif n == 1
         @stack.pop
       else

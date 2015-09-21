@@ -14,10 +14,14 @@ end
 require 'reversal/ir'
 require 'reversal/iseq'
 require 'reversal/reverser'
+require 'reversal/bugreport'
 
 
 module Reversal
   VERSION = "0.9.0"
+
+  class InternalDecompilerError < StandardError
+  end
 
   @@klassmap = Hash.new do |h, k|
     h[k] = {
@@ -34,9 +38,15 @@ module Reversal
   module_function :decompile
 
   def decompile_into(iseq, klass)
-    decompiled = self.decompile(iseq)
+    begin
+      decompiled = self.decompile(iseq)
+    rescue InternalDecompilerError
+      if ENV['UNRUBBY_REPORT_BUG']
+        BugReport.new(iseq).dump
+        exit!(1)
+      end
+    end
     @@klassmap[klass][:methods] << decompiled
-    # maybe_dump_iseq(iseq)
   end
   module_function :decompile_into
 

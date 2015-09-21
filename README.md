@@ -62,3 +62,10 @@ There's a stub that will bring up most of a rails app in `etc`. Additionally, if
 It will duck punch `Object` right in the face and make most any attempts to
 poke at other classes succeed. Note that this will break attempts to include or
 extend modules, you will need to define them yourself.
+
+Reporting Bugs
+==============
+
+unrubby isn't perfect, and probably has a lot of lowhanging fruit right now. If you run into crashes (`InternalDecompilerError`s), there's a reporting mode that'll cough up enough information for me to probably fix it. It's documented in more detail in [reporting bugs][REPORTING_BUGS]
+
+[REPORTING_BUGS]: REPORTING_BUGS.md

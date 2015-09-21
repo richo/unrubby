@@ -28,7 +28,7 @@ unless you just want a classmap.
 Experimental support for disasembling entire ISeq's is hidden behind
 `UNRUBBY_FULL_ISEQ`.
 
-When invoked as `unrubby`, unrubby will attempt to automatically load it's
+When invoked as `unrubby`, unrubby will attempt to automatically load its
 paired copy of reversal, but if you have moved things around, simply passing
 
     unrubby -r path/to/bundled/reversal/lib/reversal.rb

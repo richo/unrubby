@@ -28,8 +28,8 @@
 #ifndef HAVE_RB_STR_SET_LEN
 /* these methods should probably be backported to 1.8 */
 #define rb_str_set_len(str, length) do {	\
-	RSTRING(str)->ptr[(length)] = 0;		\
-	RSTRING(str)->len = (length);		\
+	RSTRING(str)->as.heap.ptr[(length)] = 0;		\
+	RSTRING(str)->as.heap.len = (length);		\
 } while(0)
 #endif /* ! HAVE_RB_STR_SET_LEN */
 

@@ -1,4 +1,4 @@
-CONFIGURE_ARGS ?= --prefix=$(PWD) --disable-install-doc
+CONFIGURE_ARGS ?= --prefix=$(PWD) --disable-install-doc --without-tk
 all: bin/unrubby
 
 ruby/configure:
